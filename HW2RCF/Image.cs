@@ -6,6 +6,10 @@ namespace Homeworld2.RCF
 {
     public class Image
     {
+        public const string ChunkName = "NAME";
+        public const string ChunkAttributes = "ATTR";
+        public const string ChunkData = "DATA";
+
         private string name;
         private int version;
         private int width;
@@ -71,26 +75,26 @@ namespace Homeworld2.RCF
 
         public void Read(IFFReader iff)
         {
-            iff.AddHandler("NAME", ChunkType.Default, ReadNAMEChunk);
-            iff.AddHandler("ATTR", ChunkType.Default, ReadATTRChunk);
-            iff.AddHandler("DATA", ChunkType.Default, ReadDATAChunk);
+            iff.AddHandler(ChunkName, ChunkType.Default, ReadNAMEChunk);
+            iff.AddHandler(ChunkAttributes, ChunkType.Default, ReadATTRChunk);
+            iff.AddHandler(ChunkData, ChunkType.Default, ReadDATAChunk);
             iff.Parse();
         }
 
         public void Write(IFFWriter iff)
         {
-            iff.Push("NAME");
+            iff.Push(ChunkName);
             iff.Write(name);
             iff.Pop();
 
-            iff.Push("ATTR");
+            iff.Push(ChunkAttributes);
             iff.WriteInt32(version);
             iff.WriteInt32(width);
             iff.WriteInt32(height);
             iff.WriteInt32(dataSize);
             iff.Pop();
 
-            iff.Push("DATA");
+            iff.Push(ChunkData);
             iff.Write(data);
             iff.Pop();
         }

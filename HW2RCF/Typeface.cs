@@ -5,6 +5,11 @@ namespace Homeworld2.RCF
 {
     public class Typeface
     {
+        public const string ChunkName = "NAME";
+        public const string ChunkAttributes = "ATTR";
+        public const string ChunkImage = "IMAG";
+        public const string ChunkGlyph = "GLPH";
+
         private string name;
         private string attributes;
 
@@ -59,35 +64,35 @@ namespace Homeworld2.RCF
 
         public void Read(IFFReader iff)
         {
-            iff.AddHandler("NAME", ChunkType.Default, ReadNAMEChunk);
-            iff.AddHandler("ATTR", ChunkType.Default, ReadATTRChunk);
+            iff.AddHandler(ChunkName, ChunkType.Default, ReadNAMEChunk);
+            iff.AddHandler(ChunkAttributes, ChunkType.Default, ReadATTRChunk);
 
-            iff.AddHandler("IMAG", ChunkType.Form, ReadIMAGChunk);
-            iff.AddHandler("GLPH", ChunkType.Default, ReadGLPHChunk);
+            iff.AddHandler(ChunkImage, ChunkType.Form, ReadIMAGChunk);
+            iff.AddHandler(ChunkGlyph, ChunkType.Default, ReadGLPHChunk);
 
             iff.Parse();
         }
 
         public void Write(IFFWriter iff)
         {
-            iff.Push("NAME");
+            iff.Push(ChunkName);
             iff.Write(name);
             iff.Pop();
 
-            iff.Push("ATTR");
+            iff.Push(ChunkAttributes);
             iff.Write(attributes);
             iff.Pop();
 
             for (int i = 0; i < images.Count; ++i)
             {
-                iff.Push("IMAG", ChunkType.Form);
+                iff.Push(ChunkImage, ChunkType.Form);
                 images[i].Write(iff);
                 iff.Pop();
             }
 
             for (int i = 0; i < glyphs.Count; ++i)
             {
-                iff.Push("GLPH");
+                iff.Push(ChunkGlyph);
                 glyphs[i].Write(iff);
                 iff.Pop();
             }

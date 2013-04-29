@@ -7,6 +7,13 @@ namespace Homeworld2.RCF
 {
     public class RCF
     {
+        public const string ChunkFont = "FONT";
+        public const string ChunkName = "NAME";
+        public const string ChunkVersion = "VERS";
+        public const string ChunkAttributes = "ATTR";
+        public const string ChunkCharset = "CSET";
+        public const string ChunkTypeface = "TYPE";
+
         private string name;
         private int version;
         private byte[] attributes;
@@ -45,12 +52,12 @@ namespace Homeworld2.RCF
 
         private void ReadFONTChunk(IFFReader iff, ChunkAttributes attr)
         {
-            iff.AddHandler("NAME", ChunkType.Default, ReadNAMEChunk);
-            iff.AddHandler("VERS", ChunkType.Default, ReadVERSChunk);
-            iff.AddHandler("ATTR", ChunkType.Default, ReadATTRChunk);
-            iff.AddHandler("CSET", ChunkType.Default, ReadCSETChunk);
+            iff.AddHandler(ChunkName, ChunkType.Default, ReadNAMEChunk);
+            iff.AddHandler(ChunkVersion, ChunkType.Default, ReadVERSChunk);
+            iff.AddHandler(ChunkAttributes, ChunkType.Default, ReadATTRChunk);
+            iff.AddHandler(ChunkCharset, ChunkType.Default, ReadCSETChunk);
 
-            iff.AddHandler("TYPE", ChunkType.Form, ReadTYPEChunk);
+            iff.AddHandler(ChunkTypeface, ChunkType.Form, ReadTYPEChunk);
 
             iff.Parse();
         }
@@ -88,28 +95,28 @@ namespace Homeworld2.RCF
             typefaces.Clear();
 
             IFFReader iff = new IFFReader(stream);
-            iff.AddHandler("FONT", ChunkType.Form, ReadFONTChunk);
+            iff.AddHandler(ChunkFont, ChunkType.Form, ReadFONTChunk);
             iff.Parse();
         }
 
         public void Write(Stream stream)
         {
             IFFWriter iff = new IFFWriter(stream);
-            iff.Push("FONT", ChunkType.Form);
+            iff.Push(ChunkFont, ChunkType.Form);
 
-            iff.Push("NAME");
+            iff.Push(ChunkName);
             iff.Write(name);
             iff.Pop();
 
-            iff.Push("VERS");
+            iff.Push(ChunkVersion);
             iff.WriteInt32(version);
             iff.Pop();
 
-            iff.Push("ATTR");
+            iff.Push(ChunkAttributes);
             iff.Write(attributes);
             iff.Pop();
 
-            iff.Push("CSET");
+            iff.Push(ChunkCharset);
             iff.WriteInt32(charCount);
             byte[] cset = Encoding.Unicode.GetBytes(charset);
             iff.Write(cset);
@@ -117,7 +124,7 @@ namespace Homeworld2.RCF
 
             for (int i = 0; i < typefaces.Count; ++i)
             {
-                iff.Push("TYPE", ChunkType.Form);
+                iff.Push(ChunkTypeface, ChunkType.Form);
                 typefaces[i].Write(iff);
                 iff.Pop();
             }

@@ -106,10 +106,7 @@ namespace Homeworld2.RCF
 
         public CroppedBitmap GlyphBitmap
         {
-            get
-            {
-                Height = 13; return croppedBitmap;
-            }
+            get { return croppedBitmap; }
         }
 
         public Glyph(Typeface typeface)
