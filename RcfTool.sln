@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RcfTool", "RcfTool\RcfTool.csproj", "{0DE0032B-CBF1-4475-85B4-D6F9F52E4849}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "HW2IFF", "..\..\..\..\Desktop\RcfTool\HW2IFF\HW2IFF.vbproj", "{770125AF-61DD-4D91-8B6D-428FEFF8BFE2}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "HW2IFF", "HW2IFF\HW2IFF.vbproj", "{770125AF-61DD-4D91-8B6D-428FEFF8BFE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW2RCF", "..\..\..\..\Desktop\RcfTool\HW2RCF\HW2RCF.csproj", "{178FC3CF-8518-44D0-ABC2-2CD1CEA9E965}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW2RCF", "HW2RCF\HW2RCF.csproj", "{178FC3CF-8518-44D0-ABC2-2CD1CEA9E965}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
