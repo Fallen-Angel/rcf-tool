@@ -100,6 +100,12 @@
     <Resource Include="decade.ico" />
     <Resource Include="logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HW2RCF\HW2RCF.csproj">
+      <Project>{178fc3cf-8518-44d0-abc2-2cd1cea9e965}</Project>
+      <Name>HW2RCF</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
