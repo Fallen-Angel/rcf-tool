@@ -9,8 +9,8 @@ namespace Homeworld2.RCF
     {
         private char character;
         private int imageIndex;
-        private int left;
-        private int top;
+        private int leftMargin;
+        private int topMargin;
         private int width;
         private int height;
 
@@ -35,16 +35,16 @@ namespace Homeworld2.RCF
             set { imageIndex = value; }
         }
 
-        public int Left
+        public int LeftMargin
         {
-            get { return left; }
-            set { left = value; }
+            get { return leftMargin; }
+            set { leftMargin = value; }
         }
 
-        public int Top
+        public int TopMargin
         {
-            get { return top; }
-            set { top = value; }
+            get { return topMargin; }
+            set { topMargin = value; }
         }
 
         public int Width
@@ -94,7 +94,7 @@ namespace Homeworld2.RCF
 
         public Int32Rect CropRect
         {
-            get { return new Int32Rect(left, top, width, height); }
+            get { return new Int32Rect(leftMargin, topMargin, width, height); }
         }
 
         public BitmapSource ImageBitmap
@@ -118,8 +118,8 @@ namespace Homeworld2.RCF
         {
             character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0];
             imageIndex = iff.ReadInt32();
-            left = iff.ReadInt32();
-            top = iff.ReadInt32();
+            leftMargin = iff.ReadInt32();
+            topMargin = iff.ReadInt32();
             width = iff.ReadInt32();
             height = iff.ReadInt32();
 
@@ -140,8 +140,8 @@ namespace Homeworld2.RCF
             characterArray[0] = character;
             iff.Write(Encoding.Unicode.GetBytes(characterArray));
             iff.WriteInt32(imageIndex);
-            iff.WriteInt32(left);
-            iff.WriteInt32(top);
+            iff.WriteInt32(leftMargin);
+            iff.WriteInt32(topMargin);
             iff.WriteInt32(width);
             iff.WriteInt32(height);
 

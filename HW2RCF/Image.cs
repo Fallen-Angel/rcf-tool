@@ -1,6 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Homeworld2.IFF;
+using System.Windows;
 
 namespace Homeworld2.RCF
 {
@@ -16,7 +17,7 @@ namespace Homeworld2.RCF
         private int height;
         private int dataSize;
         private byte[] data;
-        private BitmapSource bitmap;
+        private WriteableBitmap bitmap;
 
         public string Name
         {
@@ -49,10 +50,39 @@ namespace Homeworld2.RCF
             {
                 if (bitmap == null)
                 {
-                    bitmap = BitmapSource.Create(width, height, 96, 96, PixelFormats.Gray8, BitmapPalettes.Gray256, data, width);
+                    bitmap = new WriteableBitmap(BitmapSource.Create(width, height, 96, 96, PixelFormats.Gray8, BitmapPalettes.Gray256, data, width));
                 }
                 return bitmap;
             }
+            set
+            {
+                if (value != bitmap)
+                    SetNewBitmap(value);
+            }
+        }
+
+        private void SetNewBitmap(BitmapSource value)
+        {
+            bitmap = new WriteableBitmap(value);
+
+            width = bitmap.PixelWidth;
+            height = bitmap.PixelHeight;
+
+            int bytesPerPixel = (bitmap.Format.BitsPerPixel + 7) / 8;
+            int stride = 4 * ((width * bytesPerPixel + 3) / 4);
+
+            bitmap.CopyPixels(data, stride, 0);
+            dataSize = data.Length;
+        }
+
+        public void ModifyBitmap(Int32Rect sourceRect, byte[] pixels, int stride)
+        {
+            bitmap.WritePixels(sourceRect, pixels, stride, 0);
+
+            int bytesPerPixel = (bitmap.Format.BitsPerPixel + 7) / 8;
+            stride = 4 * ((width * bytesPerPixel + 3) / 4);
+
+            bitmap.CopyPixels(data, stride, 0);
         }
 
         private void ReadNAMEChunk(IFFReader iff, ChunkAttributes attr)
