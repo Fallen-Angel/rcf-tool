@@ -58,7 +58,7 @@ namespace Homeworld2.RCF
             }
             set
             {
-                if (value != bitmap)
+                if ((value != bitmap) && (value.Format == PixelFormats.Gray8))
                     SetNewBitmap(value);
             }
         }

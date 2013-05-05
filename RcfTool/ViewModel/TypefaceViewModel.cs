@@ -1,11 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using Homeworld2.RCF;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace RcfTool.ViewModel
 {
@@ -33,6 +37,14 @@ namespace RcfTool.ViewModel
                         ImageViewModel vm = new ImageViewModel();
                         vm.Image = img;
                         _images.Add(vm);
+                    }
+
+                    _glyphs.Clear();
+                    foreach (Glyph glyph in _typeface.Glyphs)
+                    {
+                        GlyphViewModel vm = new GlyphViewModel();
+                        vm.Glyph = glyph;
+                        _glyphs.Add(vm);
                     }
                 }
             }
@@ -96,6 +108,68 @@ namespace RcfTool.ViewModel
             }
         }
 
+        private RelayCommand<ImageViewModel> _exportCommand;
+
+        /// <summary>
+        /// Gets the ExportCommand.
+        /// </summary>
+        public RelayCommand<ImageViewModel> ExportCommand
+        {
+            get
+            {
+                return _exportCommand
+                    ?? (_exportCommand = new RelayCommand<ImageViewModel>(ExecuteExportCommand));
+            }
+        }
+
+        private void ExecuteExportCommand(ImageViewModel image)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "PNG images (.png)|*.png";
+
+            if (dlg.ShowDialog() == true)
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image.Bitmap));
+
+                using (Stream stream = dlg.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private RelayCommand<ImageViewModel> _replaceCommand;
+
+        /// <summary>
+        /// Gets the ReplaceCommand.
+        /// </summary>
+        public RelayCommand<ImageViewModel> ReplaceCommand
+        {
+            get
+            {
+                return _replaceCommand
+                    ?? (_replaceCommand = new RelayCommand<ImageViewModel>(ExecuteReplaceCommand));
+            }
+        }
+
+        private void ExecuteReplaceCommand(ImageViewModel image)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "PNG images (.png)|*.png";
+
+            if (dlg.ShowDialog() == true)
+            {
+                using (Stream stream = dlg.OpenFile())
+                {
+                    BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                    BitmapFrame frame = decoder.Frames[0];
+
+                    image.Bitmap = frame;
+                }
+            }
+        }
+
         public TypefaceViewModel()
         {
             ////if (IsInDesignMode)
@@ -106,13 +180,6 @@ namespace RcfTool.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
-            _images.Add(new ImageViewModel());
-            _images.Add(new ImageViewModel());
-            _images.Add(new ImageViewModel());
-
-            _glyphs.Add(new GlyphViewModel());
-            _glyphs.Add(new GlyphViewModel());
-            _glyphs.Add(new GlyphViewModel());
         }
     }
 }

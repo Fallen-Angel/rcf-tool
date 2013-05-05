@@ -76,35 +76,5 @@ namespace RcfTool.ViewModel
                 }
             }
         }
-
-        private RelayCommand _exportCommand;
-
-        /// <summary>
-        /// Gets the ExportCommand.
-        /// </summary>
-        public RelayCommand ExportCommand
-        {
-            get
-            {
-                return _exportCommand
-                    ?? (_exportCommand = new RelayCommand(
-                                          () =>
-                                          {
-                                              SaveFileDialog dlg = new SaveFileDialog();
-                                              dlg.Filter = "PNG images (.png)|*.png";
-
-                                              if (dlg.ShowDialog() == true)
-                                              {
-                                                  BitmapEncoder encoder = new PngBitmapEncoder();
-                                                  encoder.Frames.Add(BitmapFrame.Create(_image.Bitmap));
-
-                                                  using (Stream stream = dlg.OpenFile())
-                                                  {
-                                                      encoder.Save(stream);
-                                                  }
-                                              }
-                                          }));
-            }
-        }
     }
 }

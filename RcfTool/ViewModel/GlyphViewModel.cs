@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Homeworld2.RCF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,91 +10,116 @@ namespace RcfTool.ViewModel
 {
     public class GlyphViewModel : ViewModelBase
     {
-        private char _character = 'd';
-        public char Character
+        private Glyph _glyph;
+        public Glyph Glyph
         {
-            get { return _character; }
+            get { return _glyph; }
             set
             {
-                if (_character != value)
+                if (_glyph != value)
+                {
+                    RaisePropertyChanging(() => Glyph);
+
+                    RaisePropertyChanging(() => Character);
+                    RaisePropertyChanging(() => ImageIndex);
+                    RaisePropertyChanging(() => LeftMargin);
+                    RaisePropertyChanging(() => TopMargin);
+                    RaisePropertyChanging(() => Width);
+                    RaisePropertyChanging(() => Height);
+
+                    _glyph = value;
+
+                    RaisePropertyChanged(() => Glyph);
+
+                    RaisePropertyChanged(() => Character);
+                    RaisePropertyChanged(() => ImageIndex);
+                    RaisePropertyChanged(() => LeftMargin);
+                    RaisePropertyChanged(() => TopMargin);
+                    RaisePropertyChanged(() => Width);
+                    RaisePropertyChanged(() => Height);
+                }
+            }
+        }
+
+        public char Character
+        {
+            get { return _glyph.Character; }
+            set
+            {
+                if (_glyph.Character != value)
                 {
                     RaisePropertyChanging(() => Character);
-                    _character = value;
+                    _glyph.Character = value;
                     RaisePropertyChanged(() => Character);
                 }
             }
         }
 
-        private int _imageIndex = 0;
         public int ImageIndex
         {
-            get { return _imageIndex; }
+            get { return _glyph.ImageIndex; }
             set
             {
-                if (_imageIndex != value)
+                if (_glyph.ImageIndex != value)
                 {
                     RaisePropertyChanging(() => ImageIndex);
-                    _imageIndex = value;
+                    _glyph.ImageIndex = value;
                     RaisePropertyChanged(() => ImageIndex);
                 }
             }
         }
 
-        private int _leftMargin = 0;
         public int LeftMargin
         {
-            get { return _leftMargin; }
+            get { return _glyph.LeftMargin; }
             set
             {
-                if (_leftMargin != value)
+                if (_glyph.LeftMargin != value)
                 {
                     RaisePropertyChanging(() => LeftMargin);
-                    _leftMargin = value;
+                    _glyph.LeftMargin = value;
                     RaisePropertyChanged(() => LeftMargin);
                 }
             }
         }
 
-        private int _topMargin = 0;
         public int TopMargin
         {
-            get { return _topMargin; }
+            get { return _glyph.TopMargin; }
             set
             {
-                if (_topMargin != value)
+                if (_glyph.TopMargin != value)
                 {
                     RaisePropertyChanging(() => TopMargin);
-                    _topMargin = value;
+                    _glyph.TopMargin = value;
                     RaisePropertyChanged(() => TopMargin);
                 }
             }
         }
 
-        private int _width = 0;
         public int Width
         {
-            get { return _width; }
+            get { return _glyph.Width; }
             set
             {
-                if (_width != value)
+                if (_glyph.Width != value)
                 {
                     RaisePropertyChanging(() => Width);
-                    _width = value;
+                    _glyph.Width = value;
                     RaisePropertyChanged(() => Width);
                 }
             }
         }
 
-        private int _height = 0;
         public int Height
         {
-            get { return _height; }
+            get { return _glyph.Height; }
             set
             {
-                if (_height != value)
+                if (_glyph.Height != value)
                 {
                     RaisePropertyChanging(() => Height);
-                    _height = value;
+                    _glyph.Height = value;
                     RaisePropertyChanged(() => Height);
                 }
             }

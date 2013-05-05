@@ -105,36 +105,64 @@ namespace RcfTool.ViewModel
             get
             {
                 return _openCommand
-                    ?? (_openCommand = new RelayCommand(
-                                          () =>
-                                          {
-                                              OpenFileDialog dlg = new OpenFileDialog();
-                                              dlg.Filter = "Relic fonts (.rcf)|*.rcf";
-
-                                              if (dlg.ShowDialog() == true)
-                                              {
-                                                  using (Stream stream = dlg.OpenFile())
-                                                  {
-                                                      _font.Read(stream);
-
-                                                      RaisePropertyChanged(() => Name);
-                                                      RaisePropertyChanged(() => Version);
-                                                      RaisePropertyChanged(() => Charset);
-
-                                                      _typefaces.Clear();
-
-                                                      foreach (Typeface typeface in _font.Typefaces)
-                                                      {
-                                                          TypefaceViewModel vm = new TypefaceViewModel();
-                                                          vm.Typeface = typeface;
-                                                          _typefaces.Add(vm);
-                                                      }
-                                                  }
-                                              }
-                                          }));
+                    ?? (_openCommand = new RelayCommand(ExecuteOpenCommand));
             }
         }
 
+        private void ExecuteOpenCommand()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Relic fonts (.rcf)|*.rcf";
+
+            if (dlg.ShowDialog() == true)
+            {
+                using (Stream stream = dlg.OpenFile())
+                {
+                    _font.Read(stream);
+
+                    RaisePropertyChanged(() => Name);
+                    RaisePropertyChanged(() => Version);
+                    RaisePropertyChanged(() => Charset);
+
+                    _typefaces.Clear();
+
+                    foreach (Typeface typeface in _font.Typefaces)
+                    {
+                        TypefaceViewModel vm = new TypefaceViewModel();
+                        vm.Typeface = typeface;
+                        _typefaces.Add(vm);
+                    }
+                }
+            }
+        }
+
+        private RelayCommand _saveCommand;
+
+        /// <summary>
+        /// Gets the SaveCommand.
+        /// </summary>
+        public RelayCommand SaveCommand
+        {
+            get
+            {
+                return _saveCommand
+                    ?? (_saveCommand = new RelayCommand(ExecuteSaveCommand));
+            }
+        }
+
+        private void ExecuteSaveCommand()
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Relic fonts (.rcf)|*.rcf";
+
+            if (dlg.ShowDialog() == true)
+            {
+                using (Stream stream = dlg.OpenFile())
+                {
+                    _font.Write(stream);
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.

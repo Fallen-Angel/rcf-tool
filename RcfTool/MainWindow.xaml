@@ -5,8 +5,8 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button x:Name="OpenFile" Content="Open" Command="{Binding OpenCommand}"/>
-                <Button Content="Save"/>
+                <Button Content="Open" Command="{Binding OpenCommand}"/>
+                <Button Content="Save" Command="{Binding SaveCommand}"/>
                 <Separator/>
                 <Button Content="About"/>
             </ToolBar>
@@ -38,10 +38,19 @@
             <TabControl Grid.ColumnSpan="2" Grid.Row="2">
                 <TabItem Header="Images">
                     <ListView ItemsSource="{Binding Images}" Margin="2">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Export"
+                                    Command="{Binding ExportCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"/>
+                                <MenuItem Header="Replace"
+                                    Command="{Binding ReplaceCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"/>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <Button Content="Export" Command="{Binding ExportCommand}"/>
                                     <Label Content="{Binding Name}"/>
                                     <Image Source="{Binding Bitmap}" Stretch="None"/>
                                 </StackPanel>
@@ -55,7 +64,21 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Glyphs">
-                    <Grid/>
+                    <Grid>
+                        <ListView ItemsSource="{Binding Glyphs}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Character}" Header="Character"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding ImageIndex}" Header="Image"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding TopMargin}" Header="Top margin"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding LeftMargin}" Header="Left margin"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Width}" Header="Width"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Height}" Header="Height"/>
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>
