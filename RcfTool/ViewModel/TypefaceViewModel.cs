@@ -26,6 +26,14 @@ namespace RcfTool.ViewModel
                     RaisePropertyChanged(() => Typeface);
                     RaisePropertyChanged(() => Name);
                     RaisePropertyChanged(() => Attributes);
+
+                    _images.Clear();
+                    foreach (Image img in _typeface.Images)
+                    {
+                        ImageViewModel vm = new ImageViewModel();
+                        vm.Image = img;
+                        _images.Add(vm);
+                    }
                 }
             }
         }

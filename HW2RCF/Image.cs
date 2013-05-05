@@ -22,6 +22,7 @@ namespace Homeworld2.RCF
         public string Name
         {
             get { return name; }
+            set { name = value; }
         }
 
         public int Width
@@ -42,6 +43,7 @@ namespace Homeworld2.RCF
         public int Version
         {
             get { return version; }
+            set { version = value; }
         }
 
         public BitmapSource Bitmap

@@ -17,7 +17,7 @@
             <Label Content="Version" Target="{Binding ElementName=fontVersion}"/>
             <TextBox x:Name="fontVersion" Height="23" TextWrapping="Wrap" Text="{Binding Version}"/>
             <Label Content="Charset" Target="{Binding ElementName=fontCharset}"/>
-            <TextBox x:Name="fontCharset" Text="{Binding Charset}"/>
+            <TextBox x:Name="fontCharset" Text="{Binding Charset}" TextWrapping="Wrap"/>
             <Label Content="Typefaces" Target="{Binding ElementName=fontTypefaces}"/>
             <ListBox x:Name="fontTypefaces" MinHeight="100" ItemsSource="{Binding Typefaces}" SelectedItem="{Binding SelectedTypeface}" DisplayMemberPath="Name"/>
         </StackPanel>
@@ -41,6 +41,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
+                                    <Button Content="Export" Command="{Binding ExportCommand}"/>
                                     <Label Content="{Binding Name}"/>
                                     <Image Source="{Binding Bitmap}" Stretch="None"/>
                                 </StackPanel>
