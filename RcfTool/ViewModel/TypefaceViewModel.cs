@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Homeworld2.RCF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,31 +11,48 @@ namespace RcfTool.ViewModel
 {
     public class TypefaceViewModel : ViewModelBase
     {
-        private string _name = "Microgramma 24";
-        public string Name
+        private Typeface _typeface;
+        public Typeface Typeface
         {
-            get { return _name; }
+            get { return _typeface; }
             set
             {
-                if (_name != value)
+                if (_typeface != value)
+                {
+                    RaisePropertyChanging(() => Typeface);
+                    RaisePropertyChanging(() => Name);
+                    RaisePropertyChanging(() => Attributes);
+                    _typeface = value;
+                    RaisePropertyChanged(() => Typeface);
+                    RaisePropertyChanged(() => Name);
+                    RaisePropertyChanged(() => Attributes);
+                }
+            }
+        }
+
+        public string Name
+        {
+            get { return _typeface.Name; }
+            set
+            {
+                if (_typeface.Name != value)
                 {
                     RaisePropertyChanging(() => Name);
-                    _name = value;
+                    _typeface.Name = value;
                     RaisePropertyChanged(() => Name);
                 }
             }
         }
 
-        private string _attributes = "dadad";
         public string Attributes
         {
-            get { return _attributes; }
+            get { return _typeface.Attributes; }
             set
             {
-                if (_attributes != value)
+                if (_typeface.Attributes != value)
                 {
                     RaisePropertyChanging(() => Attributes);
-                    _attributes = value;
+                    _typeface.Attributes = value;
                     RaisePropertyChanged(() => Attributes);
                 }
             }

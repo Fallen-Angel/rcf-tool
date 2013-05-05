@@ -5,7 +5,7 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button x:Name="OpenFile" Content="Open"/>
+                <Button x:Name="OpenFile" Content="Open" Command="{Binding OpenCommand}"/>
                 <Button Content="Save"/>
                 <Separator/>
                 <Button Content="About"/>

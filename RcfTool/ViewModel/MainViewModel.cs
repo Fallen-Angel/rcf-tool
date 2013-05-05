@@ -1,5 +1,9 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Homeworld2.RCF;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace RcfTool.ViewModel
 {
@@ -17,46 +21,45 @@ namespace RcfTool.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private string _name = "Microgramma";
+        private RCF _font = new RCF();
+
         public string Name
         {
-            get { return _name; }
+            get { return _font.Name; }
             set
             {
-                if (_name != value)
+                if (_font.Name != value)
                 {
                     RaisePropertyChanging(() => Name);
-                    _name = value;
+                    _font.Name = value;
                     RaisePropertyChanged(() => Name);
                 }
             }
         }
 
-        private int _version = 1;
         public int Version
         {
-            get { return _version; }
+            get { return _font.Version; }
             set
             {
-                if (_version != value)
+                if (_font.Version != value)
                 {
                     RaisePropertyChanging(() => Version);
-                    _version = value;
+                    _font.Version = value;
                     RaisePropertyChanged(() => Version);
                 }
             }
         }
 
-        private string _charset = "abcde";
         public string Charset
         {
-            get { return _charset; }
+            get { return _font.Charset; }
             set
             {
-                if (_charset != value)
+                if (_font.Charset != value)
                 {
                     RaisePropertyChanging(() => Charset);
-                    _charset = value;
+                    _font.Charset = value;
                     RaisePropertyChanged(() => Charset);
                 }
             }
@@ -92,6 +95,46 @@ namespace RcfTool.ViewModel
             }
         }
 
+        private RelayCommand _openCommand;
+
+        /// <summary>
+        /// Gets the OpenCommand.
+        /// </summary>
+        public RelayCommand OpenCommand
+        {
+            get
+            {
+                return _openCommand
+                    ?? (_openCommand = new RelayCommand(
+                                          () =>
+                                          {
+                                              OpenFileDialog dlg = new OpenFileDialog();
+                                              dlg.Filter = "Relic fonts (.rcf)|*.rcf";
+
+                                              if (dlg.ShowDialog() == true)
+                                              {
+                                                  using (Stream stream = dlg.OpenFile())
+                                                  {
+                                                      _font.Read(stream);
+
+                                                      RaisePropertyChanged(() => Name);
+                                                      RaisePropertyChanged(() => Version);
+                                                      RaisePropertyChanged(() => Charset);
+
+                                                      _typefaces.Clear();
+
+                                                      foreach (Typeface typeface in _font.Typefaces)
+                                                      {
+                                                          TypefaceViewModel vm = new TypefaceViewModel();
+                                                          vm.Typeface = typeface;
+                                                          _typefaces.Add(vm);
+                                                      }
+                                                  }
+                                              }
+                                          }));
+            }
+        }
+
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -106,9 +149,6 @@ namespace RcfTool.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
-            _typefaces.Add(new TypefaceViewModel() { Name = "12" });
-            _typefaces.Add(new TypefaceViewModel() { Name = "16" });
-            _typefaces.Add(new TypefaceViewModel() { Name = "24" });
         }
     }
 }
