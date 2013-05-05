@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,36 @@ namespace RcfTool.ViewModel
             }
         }
 
+        private ObservableCollection<ImageViewModel> _images = new ObservableCollection<ImageViewModel>();
+        public ObservableCollection<ImageViewModel> Images
+        {
+            get { return _images; }
+            set
+            {
+                if (_images != value)
+                {
+                    RaisePropertyChanging(() => Images);
+                    _images = value;
+                    RaisePropertyChanged(() => Images);
+                }
+            }
+        }
+
+        private ObservableCollection<GlyphViewModel> _glyphs = new ObservableCollection<GlyphViewModel>();
+        public ObservableCollection<GlyphViewModel> Glyphs
+        {
+            get { return _glyphs; }
+            set
+            {
+                if (_glyphs != value)
+                {
+                    RaisePropertyChanging(() => Glyphs);
+                    _glyphs = value;
+                    RaisePropertyChanged(() => Glyphs);
+                }
+            }
+        }
+
         public TypefaceViewModel()
         {
             ////if (IsInDesignMode)
@@ -49,6 +80,13 @@ namespace RcfTool.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+            _images.Add(new ImageViewModel());
+            _images.Add(new ImageViewModel());
+            _images.Add(new ImageViewModel());
+
+            _glyphs.Add(new GlyphViewModel());
+            _glyphs.Add(new GlyphViewModel());
+            _glyphs.Add(new GlyphViewModel());
         }
     }
 }

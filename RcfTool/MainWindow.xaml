@@ -41,6 +41,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
+                                    <Label Content="{Binding Name}"/>
                                     <Image Source="{Binding Bitmap}" Stretch="None"/>
                                 </StackPanel>
                             </DataTemplate>
