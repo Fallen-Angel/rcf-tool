@@ -123,6 +123,45 @@ namespace RcfTool.ViewModel
             }
         }
 
+        private RelayCommand _importCommand;
+
+        /// <summary>
+        /// Gets the ImportCommand.
+        /// </summary>
+        public RelayCommand ImportCommand
+        {
+            get
+            {
+                return _importCommand
+                    ?? (_importCommand = new RelayCommand(ExecuteImportCommand));
+            }
+        }
+
+        private void ExecuteImportCommand()
+        {
+            Image img = new Image();
+            img.Name = "";
+            img.Version = 1;
+
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "PNG images (.png)|*.png";
+
+            if (dlg.ShowDialog() == true)
+            {
+                using (Stream stream = dlg.OpenFile())
+                {
+                    BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                    BitmapFrame frame = decoder.Frames[0];
+
+                    img.Bitmap = frame;
+                }
+            }
+            ImageViewModel vm = new ImageViewModel();
+            vm.Image = img;
+            _typeface.Images.Add(img);
+            _images.Add(vm);
+        }
+
         private RelayCommand<ImageViewModel> _exportCommand;
 
         /// <summary>
