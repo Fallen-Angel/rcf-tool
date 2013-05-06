@@ -73,6 +73,7 @@ namespace Homeworld2.RCF
             int bytesPerPixel = (bitmap.Format.BitsPerPixel + 7) / 8;
             int stride = 4 * ((width * bytesPerPixel + 3) / 4);
 
+            data = new byte[width * height];
             bitmap.CopyPixels(data, stride, 0);
             dataSize = data.Length;
         }
