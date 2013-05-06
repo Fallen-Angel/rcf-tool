@@ -33,7 +33,11 @@ namespace Homeworld2.RCF
         public int ImageIndex
         {
             get { return imageIndex; }
-            set { imageIndex = value; }
+            set
+            {
+                imageIndex = value;
+                GenerateCropRect();
+            }
         }
 
         public int LeftMargin

@@ -58,14 +58,18 @@ namespace RcfTool.ViewModel
 
         public int ImageIndex
         {
-            get { return _glyph.ImageIndex; }
+            get { return _glyph.ImageIndex + 1; }
             set
             {
                 if (_glyph.ImageIndex != value)
                 {
                     RaisePropertyChanging(() => ImageIndex);
-                    _glyph.ImageIndex = value;
+                    RaisePropertyChanging(() => ImageBitmap);
+                    RaisePropertyChanging(() => GlyphBitmap);
+                    _glyph.ImageIndex = value - 1;
                     RaisePropertyChanged(() => ImageIndex);
+                    RaisePropertyChanged(() => ImageBitmap);
+                    RaisePropertyChanged(() => GlyphBitmap);
                 }
             }
         }
@@ -78,10 +82,12 @@ namespace RcfTool.ViewModel
                 if (_glyph.LeftMargin != value)
                 {
                     RaisePropertyChanging(() => LeftMargin);
-                    RaisePropertyChanging(() => Bitmap);
+                    RaisePropertyChanging(() => ImageBitmap);
+                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.LeftMargin = value;
                     RaisePropertyChanged(() => LeftMargin);
-                    RaisePropertyChanged(() => Bitmap);
+                    RaisePropertyChanged(() => ImageBitmap);
+                    RaisePropertyChanged(() => GlyphBitmap);
                 }
             }
         }
@@ -94,10 +100,12 @@ namespace RcfTool.ViewModel
                 if (_glyph.TopMargin != value)
                 {
                     RaisePropertyChanging(() => TopMargin);
-                    RaisePropertyChanging(() => Bitmap);
+                    RaisePropertyChanging(() => ImageBitmap);
+                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.TopMargin = value;
                     RaisePropertyChanged(() => TopMargin);
-                    RaisePropertyChanged(() => Bitmap);
+                    RaisePropertyChanged(() => ImageBitmap);
+                    RaisePropertyChanged(() => GlyphBitmap);
                 }
             }
         }
@@ -110,10 +118,12 @@ namespace RcfTool.ViewModel
                 if (_glyph.Width != value)
                 {
                     RaisePropertyChanging(() => Width);
-                    RaisePropertyChanging(() => Bitmap);
+                    RaisePropertyChanging(() => ImageBitmap);
+                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.Width = value;
                     RaisePropertyChanged(() => Width);
-                    RaisePropertyChanged(() => Bitmap);
+                    RaisePropertyChanged(() => ImageBitmap);
+                    RaisePropertyChanged(() => GlyphBitmap);
                 }
             }
         }
@@ -126,10 +136,12 @@ namespace RcfTool.ViewModel
                 if (_glyph.Height != value)
                 {
                     RaisePropertyChanging(() => Height);
-                    RaisePropertyChanging(() => Bitmap);
+                    RaisePropertyChanging(() => ImageBitmap);
+                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.Height = value;
                     RaisePropertyChanged(() => Height);
-                    RaisePropertyChanged(() => Bitmap);
+                    RaisePropertyChanged(() => ImageBitmap);
+                    RaisePropertyChanged(() => GlyphBitmap);
                 }
             }
         }
@@ -190,9 +202,14 @@ namespace RcfTool.ViewModel
             }
         }
 
-        public BitmapSource Bitmap
+        public BitmapSource GlyphBitmap
         {
             get { return _glyph.GlyphBitmap; }
+        }
+
+        public BitmapSource ImageBitmap
+        {
+            get { return _glyph.ImageBitmap; }
         }
     }
 }
