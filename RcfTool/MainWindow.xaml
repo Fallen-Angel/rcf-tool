@@ -64,21 +64,17 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Glyphs">
-                    <Grid>
-                        <ListView ItemsSource="{Binding Glyphs}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Character}" Header="Character"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding ImageIndex}" Header="Image"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding TopMargin}" Header="Top margin"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding LeftMargin}" Header="Left margin"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Width}" Header="Width"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Height}" Header="Height"/>
-
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
+                    <DockPanel>
+                        <ListBox ItemsSource="{Binding Glyphs}" DisplayMemberPath="Character" Width="50" SelectedItem="{Binding SelectedGlyph}"/>
+                        <Grid DataContext="{Binding SelectedGlyph}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="66*"/>
+                                <RowDefinition Height="41*"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding Bitmap, Mode=OneWay}" RenderOptions.BitmapScalingMode="NearestNeighbor" Stretch="None"/>
+                            <TextBox Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+                        </Grid>
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </Grid>

@@ -78,6 +78,21 @@ namespace RcfTool.ViewModel
             }
         }
 
+        private GlyphViewModel _selectedGlyph;
+        public GlyphViewModel SelectedGlyph
+        {
+            get { return _selectedGlyph; }
+            set
+            {
+                if (_selectedGlyph != value)
+                {
+                    RaisePropertyChanging(() => SelectedGlyph);
+                    _selectedGlyph = value;
+                    RaisePropertyChanged(() => SelectedGlyph);
+                }
+            }
+        }
+
         private ObservableCollection<ImageViewModel> _images = new ObservableCollection<ImageViewModel>();
         public ObservableCollection<ImageViewModel> Images
         {
