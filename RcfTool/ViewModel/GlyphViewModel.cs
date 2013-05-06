@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace RcfTool.ViewModel
 {
@@ -77,8 +78,10 @@ namespace RcfTool.ViewModel
                 if (_glyph.LeftMargin != value)
                 {
                     RaisePropertyChanging(() => LeftMargin);
+                    RaisePropertyChanging(() => Bitmap);
                     _glyph.LeftMargin = value;
                     RaisePropertyChanged(() => LeftMargin);
+                    RaisePropertyChanged(() => Bitmap);
                 }
             }
         }
@@ -91,8 +94,10 @@ namespace RcfTool.ViewModel
                 if (_glyph.TopMargin != value)
                 {
                     RaisePropertyChanging(() => TopMargin);
+                    RaisePropertyChanging(() => Bitmap);
                     _glyph.TopMargin = value;
                     RaisePropertyChanged(() => TopMargin);
+                    RaisePropertyChanged(() => Bitmap);
                 }
             }
         }
@@ -105,8 +110,10 @@ namespace RcfTool.ViewModel
                 if (_glyph.Width != value)
                 {
                     RaisePropertyChanging(() => Width);
+                    RaisePropertyChanging(() => Bitmap);
                     _glyph.Width = value;
                     RaisePropertyChanged(() => Width);
+                    RaisePropertyChanged(() => Bitmap);
                 }
             }
         }
@@ -119,10 +126,73 @@ namespace RcfTool.ViewModel
                 if (_glyph.Height != value)
                 {
                     RaisePropertyChanging(() => Height);
+                    RaisePropertyChanging(() => Bitmap);
                     _glyph.Height = value;
                     RaisePropertyChanged(() => Height);
+                    RaisePropertyChanged(() => Bitmap);
                 }
             }
+        }
+
+        public float WidthInPoints
+        {
+            get { return _glyph.WidthInPoints; }
+            set
+            {
+                if (_glyph.WidthInPoints != value)
+                {
+                    RaisePropertyChanging(() => WidthInPoints);
+                    _glyph.WidthInPoints = value;
+                    RaisePropertyChanged(() => WidthInPoints);
+                }
+            }
+        }
+
+        public float FloatWidth
+        {
+            get { return _glyph.FloatWidth; }
+            set
+            {
+                if (_glyph.FloatWidth != value)
+                {
+                    RaisePropertyChanging(() => FloatWidth);
+                    _glyph.FloatWidth = value;
+                    RaisePropertyChanged(() => FloatWidth);
+                }
+            }
+        }
+
+        public float HeightInPoints
+        {
+            get { return _glyph.HeightInPoints; }
+            set
+            {
+                if (_glyph.HeightInPoints != value)
+                {
+                    RaisePropertyChanging(() => HeightInPoints);
+                    _glyph.HeightInPoints = value;
+                    RaisePropertyChanged(() => HeightInPoints);
+                }
+            }
+        }
+
+        public float FloatHeight
+        {
+            get { return _glyph.FloatHeight; }
+            set
+            {
+                if (_glyph.FloatHeight != value)
+                {
+                    RaisePropertyChanging(() => FloatHeight);
+                    _glyph.FloatHeight = value;
+                    RaisePropertyChanged(() => FloatHeight);
+                }
+            }
+        }
+
+        public BitmapSource Bitmap
+        {
+            get { return _glyph.GlyphBitmap; }
         }
     }
 }

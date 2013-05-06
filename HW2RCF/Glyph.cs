@@ -15,12 +15,13 @@ namespace Homeworld2.RCF
         private int height;
 
         private float tmp1;
-        private float widthPointsJ;
-        private float widthJ;
+        private float widthInPoints;
+        private float floatWidth;
         private float tmp2;
-        private float heightPointsJ;
-        private float heightJ;
+        private float heightInPoints;
+        private float floatHeight;
         private byte temp;
+
         private Typeface typeface;
 
         public char Character
@@ -38,13 +39,21 @@ namespace Homeworld2.RCF
         public int LeftMargin
         {
             get { return leftMargin; }
-            set { leftMargin = value; }
+            set
+            {
+                leftMargin = value;
+                GenerateCropRect();
+            }
         }
 
         public int TopMargin
         {
             get { return topMargin; }
-            set { topMargin = value; }
+            set
+            {
+                topMargin = value;
+                GenerateCropRect();
+            }
         }
 
         public int Width
@@ -53,6 +62,7 @@ namespace Homeworld2.RCF
             set
             {
                 width = value;
+                GenerateCropRect();
             }
         }
 
@@ -62,39 +72,51 @@ namespace Homeworld2.RCF
             set
             {
                 height = value;
-                Int32Rect rect = croppedBitmap.SourceRect;
-                rect.Height = value;
-                croppedBitmap.SourceRect = rect;
+                GenerateCropRect();
             }
         }
 
-        public float WidthPointsJ
+        public float WidthInPoints
         {
-            get { return widthPointsJ; }
-            set { widthPointsJ = value; }
+            get { return widthInPoints; }
+            set { widthInPoints = value; }
         }
 
-        public float WidthJ
+        public float FloatWidth
         {
-            get { return widthJ; }
-            set { widthJ = value; }
+            get { return floatWidth; }
+            set { floatWidth = value; }
         }
 
-        public float HeightPointsJ
+        public float HeightInPoints
         {
-            get { return heightPointsJ; }
-            set { heightPointsJ = value; }
+            get { return heightInPoints; }
+            set { heightInPoints = value; }
         }
 
-        public float HeightJ
+        public float FloatHeight
         {
-            get { return heightJ; }
-            set { heightJ = value; }
+            get { return floatHeight; }
+            set { floatHeight = value; }
         }
 
+        private Int32Rect _cropRect;
         public Int32Rect CropRect
         {
-            get { return new Int32Rect(leftMargin, topMargin, width, height); }
+            get { return _cropRect; }
+            set
+            {
+                if (_cropRect != value)
+                {
+                    _cropRect = value;
+                }
+            }
+        }
+
+        private void GenerateCropRect()
+        {
+            CropRect = new Int32Rect(leftMargin, topMargin, width, height);
+            croppedBitmap = new CroppedBitmap(typeface.Images[imageIndex].Bitmap, CropRect);
         }
 
         public BitmapSource ImageBitmap
@@ -124,14 +146,14 @@ namespace Homeworld2.RCF
             height = iff.ReadInt32();
 
             tmp1 = iff.ReadSingle();
-            widthPointsJ = iff.ReadSingle();
-            widthJ = iff.ReadSingle();
+            widthInPoints = iff.ReadSingle();
+            floatWidth = iff.ReadSingle();
             tmp2 = iff.ReadSingle();
-            heightPointsJ = iff.ReadSingle();
-            heightJ = iff.ReadSingle();
+            heightInPoints = iff.ReadSingle();
+            floatHeight = iff.ReadSingle();
             temp = iff.ReadByte();
 
-            croppedBitmap = new CroppedBitmap(typeface.Images[imageIndex].Bitmap, CropRect);
+            GenerateCropRect();
         }
 
         public void Write(IFFWriter iff)
@@ -146,11 +168,11 @@ namespace Homeworld2.RCF
             iff.WriteInt32(height);
 
             iff.Write(tmp1);
-            iff.Write(widthPointsJ);
-            iff.Write(widthJ);
+            iff.Write(widthInPoints);
+            iff.Write(floatWidth);
             iff.Write(tmp2);
-            iff.Write(heightPointsJ);
-            iff.Write(heightJ);
+            iff.Write(heightInPoints);
+            iff.Write(floatHeight);
             iff.Write(temp);
         }
 
