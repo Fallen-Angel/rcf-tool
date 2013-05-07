@@ -125,14 +125,33 @@ namespace Homeworld2.RCF
 
         public BitmapSource ImageBitmap
         {
-            get { return typeface.Images[imageIndex].Bitmap; }
+            get { return Image.Bitmap; }
+        }
+
+        private Image Image
+        {
+            get { return typeface.Images[imageIndex]; }
         }
 
         private CroppedBitmap croppedBitmap;
 
-        public CroppedBitmap GlyphBitmap
+        public BitmapSource GlyphBitmap
         {
             get { return croppedBitmap; }
+            set
+            {
+                if (croppedBitmap != value)
+                {
+                    if ((value.PixelWidth == croppedBitmap.PixelWidth) && (value.PixelHeight == croppedBitmap.PixelHeight))
+                    {
+                        byte[] data = new byte[value.PixelWidth * value.PixelHeight];
+                        value.CopyPixels(data, value.PixelWidth, 0);
+
+                        Image.ModifyBitmap(_cropRect, data, value.PixelWidth);
+                        GenerateCropRect();
+                    }
+                }
+            }
         }
 
         public Glyph(Typeface typeface)

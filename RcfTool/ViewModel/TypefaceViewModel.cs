@@ -162,6 +162,31 @@ namespace RcfTool.ViewModel
             _images.Add(vm);
         }
 
+        private RelayCommand _addGlyphCommand;
+
+        /// <summary>
+        /// Gets the AddGlyphCommand.
+        /// </summary>
+        public RelayCommand AddGlyphCommand
+        {
+            get
+            {
+                return _addGlyphCommand
+                    ?? (_addGlyphCommand = new RelayCommand(ExecuteAddGlyphCommand));
+            }
+        }
+
+        private void ExecuteAddGlyphCommand()
+        {
+            Glyph glyph = new Glyph(_typeface);
+            _typeface.Glyphs.Add(glyph);
+
+            GlyphViewModel vm = new GlyphViewModel();
+            vm.Glyph = glyph;
+            _glyphs.Add(vm);
+            SelectedGlyph = vm;
+        }
+
         private RelayCommand<ImageViewModel> _exportCommand;
 
         /// <summary>

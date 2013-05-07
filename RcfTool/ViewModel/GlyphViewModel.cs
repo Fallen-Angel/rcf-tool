@@ -1,7 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using Homeworld2.RCF;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -205,11 +208,82 @@ namespace RcfTool.ViewModel
         public BitmapSource GlyphBitmap
         {
             get { return _glyph.GlyphBitmap; }
+            set
+            {
+                if (_glyph.GlyphBitmap != value)
+                {
+                    RaisePropertyChanging(() => GlyphBitmap);
+                    _glyph.GlyphBitmap = value;
+                    RaisePropertyChanged(() => GlyphBitmap);
+                }
+            }
         }
 
         public BitmapSource ImageBitmap
         {
             get { return _glyph.ImageBitmap; }
+        }
+
+        private RelayCommand _exportCommand;
+
+        /// <summary>
+        /// Gets the ExportCommand.
+        /// </summary>
+        public RelayCommand ExportCommand
+        {
+            get
+            {
+                return _exportCommand
+                    ?? (_exportCommand = new RelayCommand(ExecuteExportCommand));
+            }
+        }
+
+        private void ExecuteExportCommand()
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "PNG images (.png)|*.png";
+
+            if (dlg.ShowDialog() == true)
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(_glyph.GlyphBitmap));
+
+                using (Stream stream = dlg.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private RelayCommand _replaceCommand;
+
+        /// <summary>
+        /// Gets the ReplaceCommand.
+        /// </summary>
+        public RelayCommand ReplaceCommand
+        {
+            get
+            {
+                return _replaceCommand
+                    ?? (_replaceCommand = new RelayCommand(ExecuteReplaceCommand));
+            }
+        }
+
+        private void ExecuteReplaceCommand()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "PNG images (.png)|*.png";
+
+            if (dlg.ShowDialog() == true)
+            {
+                using (Stream stream = dlg.OpenFile())
+                {
+                    BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                    BitmapFrame frame = decoder.Frames[0];
+
+                    _glyph.GlyphBitmap = frame;
+                }
+            }
         }
     }
 }

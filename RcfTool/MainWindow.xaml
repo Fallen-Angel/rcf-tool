@@ -16,7 +16,7 @@
             <TextBox x:Name="fontName" Height="23" TextWrapping="Wrap" Text="{Binding Name}"/>
             <Label Content="Version" Target="{Binding ElementName=fontVersion}"/>
             <TextBox x:Name="fontVersion" Height="23" TextWrapping="Wrap" Text="{Binding Version}"/>
-            <Label Content="Charset" Target="{Binding ElementName=fontCharset}"/>
+            <Label Content="Charset" Target="{Binding ElementName=fontCharset}" HorizontalAlignment="Left"/>
             <TextBox x:Name="fontCharset" Text="{Binding Charset}" TextWrapping="Wrap"/>
             <Label Content="Typefaces" Target="{Binding ElementName=fontTypefaces}"/>
             <ListBox x:Name="fontTypefaces" MinHeight="100" ItemsSource="{Binding Typefaces}" SelectedItem="{Binding SelectedTypeface}" DisplayMemberPath="Name"/>
@@ -25,17 +25,20 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Content="Name"/>
+            <Label Content="Name" HorizontalAlignment="Right"/>
             <TextBox Grid.Column="1" Text="{Binding Name}"/>
-            <Label Content="Attributes" Grid.Row="1"/>
+            <Label Content="Attributes" Grid.Row="1" HorizontalAlignment="Right"/>
             <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Attributes}"/>
-            <TabControl Grid.ColumnSpan="2" Grid.Row="2">
+            <Label Content="Glyph count" Grid.Row="2" HorizontalAlignment="Right"/>
+            <Label Content="{Binding Glyphs.Count}" Grid.Row="2" HorizontalAlignment="Left" Grid.Column="1"/>
+            <TabControl Grid.ColumnSpan="2" Grid.Row="3">
                 <TabItem Header="Images">
                     <DockPanel>
                         <ToolBarTray DockPanel.Dock="Top">
@@ -74,8 +77,10 @@
                     <DockPanel>
                         <ToolBarTray DockPanel.Dock="Top">
                             <ToolBar ToolBarTray.IsLocked="True">
-                                <Button Content="Add"/>
+                                <Button Content="Add" Command="{Binding AddGlyphCommand, Mode=OneWay}"/>
                                 <Button Content="Remove"/>
+                                <Button Content="Export" Command="{Binding SelectedGlyph.ExportCommand, Mode=OneWay}"/>
+                                <Button Content="Replace" Command="{Binding SelectedGlyph.ReplaceCommand, Mode=OneWay}"/>
                             </ToolBar>
                         </ToolBarTray>
                         <ListBox ItemsSource="{Binding Glyphs}" SelectedItem="{Binding SelectedGlyph}" DisplayMemberPath="Character" MinWidth="30"/>
@@ -88,13 +93,36 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="89*"/>
                             </Grid.RowDefinitions>
                             <Label Content="Character" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Character}" VerticalAlignment="Center" Width="30" Grid.Column="1" MaxLength="1"/>
+                            <Label Content="Image index" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"/>
+                            <TextBox Height="23" TextWrapping="Wrap" Text="{Binding ImageIndex, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
                             <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="100" Grid.Row="1" VerticalAlignment="Top" Width="100" Source="{Binding ImageBitmap, Mode=OneWay}"/>
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="100" Grid.Row="1" VerticalAlignment="Top" Width="100" Source="{Binding GlyphBitmap, Mode=OneWay}" Grid.Column="2" Grid.ColumnSpan="2"/>
-                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Width}" VerticalAlignment="Top"/>
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="100" Grid.Row="1" VerticalAlignment="Top" Width="100" Source="{Binding GlyphBitmap, Mode=OneWay}" Grid.Column="2"/>
+
+                            <Label Content="Left" Grid.Row="2" HorizontalAlignment="Right"/>
+                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding LeftMargin}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Top" Grid.Row="3" HorizontalAlignment="Right"/>
+                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding TopMargin}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Width" Grid.Row="2" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Width}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Height" Grid.Row="3" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Height}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
+
+                            <Label Content="Width pt" Grid.Row="4" HorizontalAlignment="Right"/>
+                            <TextBox Height="23" Grid.Row="4" TextWrapping="Wrap" Text="{Binding WidthInPoints}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Height pt" Grid.Row="5" HorizontalAlignment="Right"/>
+                            <TextBox Height="23" Grid.Row="5" TextWrapping="Wrap" Text="{Binding HeightInPoints}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Width float" Grid.Row="4" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <TextBox Height="23" Grid.Row="4" TextWrapping="Wrap" Text="{Binding FloatWidth}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
+                            <Label Content="Height float" Grid.Row="5" HorizontalAlignment="Right" Grid.Column="1"/>
+                            <TextBox Height="23" Grid.Row="5" TextWrapping="Wrap" Text="{Binding FloatHeight}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
                         </Grid>
                     </DockPanel>
                 </TabItem>
