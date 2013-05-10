@@ -58,8 +58,14 @@ namespace Homeworld2.RCF
             }
             set
             {
-                if ((value != bitmap) && (value.Format == PixelFormats.Gray8))
+                if (value != bitmap)
+                {
+                    if (value.Format != PixelFormats.Gray8)
+                    {
+                        value = new FormatConvertedBitmap(value, PixelFormats.Gray8, BitmapPalettes.Gray256, 0);
+                    }
                     SetNewBitmap(value);
+                }
             }
         }
 
