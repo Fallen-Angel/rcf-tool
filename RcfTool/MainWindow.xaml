@@ -107,13 +107,13 @@
                             <Image RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Left" Height="100" Grid.Row="1" VerticalAlignment="Top" Width="100" Source="{Binding GlyphBitmap, Mode=OneWay}" Grid.Column="2"/>
 
                             <Label Content="Left" Grid.Row="2" HorizontalAlignment="Right"/>
-                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding LeftMargin}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding LeftMargin, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
                             <Label Content="Top" Grid.Row="3" HorizontalAlignment="Right"/>
-                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding TopMargin}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
+                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding TopMargin, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>
                             <Label Content="Width" Grid.Row="2" HorizontalAlignment="Right" Grid.Column="1"/>
-                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Width}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
+                            <TextBox Height="23" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
                             <Label Content="Height" Grid.Row="3" HorizontalAlignment="Right" Grid.Column="1"/>
-                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Height}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
+                            <TextBox Height="23" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Left" MinWidth="30"/>
 
                             <Label Content="Width pt" Grid.Row="4" HorizontalAlignment="Right"/>
                             <TextBox Height="23" Grid.Row="4" TextWrapping="Wrap" Text="{Binding WidthInPoints}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left" MinWidth="30"/>

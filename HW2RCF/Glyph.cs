@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Homeworld2.IFF;
+using System.Windows.Media;
 
 namespace Homeworld2.RCF
 {
@@ -144,6 +145,11 @@ namespace Homeworld2.RCF
                 {
                     if ((value.PixelWidth == croppedBitmap.PixelWidth) && (value.PixelHeight == croppedBitmap.PixelHeight))
                     {
+                        if (value.Format != PixelFormats.Gray8)
+                        {
+                            value = new FormatConvertedBitmap(value, PixelFormats.Gray8, BitmapPalettes.Gray256, 0);
+                        }
+
                         byte[] data = new byte[value.PixelWidth * value.PixelHeight];
                         value.CopyPixels(data, value.PixelWidth, 0);
 
