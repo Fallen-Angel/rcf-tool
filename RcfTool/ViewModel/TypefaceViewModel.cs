@@ -93,23 +93,23 @@ namespace RcfTool.ViewModel
 
         private void ExecuteImportCommand()
         {
-            var image = new Image { Name = "", Version = 1 };
+            var image = new Image();
+            var imageViewModel = new ImageViewModel(image);
 
-            var dlg = new OpenFileDialog();
-            dlg.Filter = PngFilter;
+            var dlg = new OpenFileDialog { Filter = PngFilter };
 
             if (dlg.ShowDialog() == true)
             {
-                using (Stream stream = dlg.OpenFile())
+                using (var stream = dlg.OpenFile())
                 {
                     BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
                     var frame = decoder.Frames[0];
 
-                    image.Bitmap = frame;
+                    imageViewModel.Bitmap = frame;
                 }
             }
             _typeface.Images.Add(image);
-            _images.Add(new ImageViewModel(image));
+            _images.Add(imageViewModel);
         }
 
         private RelayCommand _addGlyphCommand;
@@ -128,10 +128,10 @@ namespace RcfTool.ViewModel
 
         private void ExecuteAddGlyphCommand()
         {
-            var glyph = new Glyph(_typeface);
+            var glyph = new Glyph();
             _typeface.Glyphs.Add(glyph);
 
-            var vm = new GlyphViewModel(glyph);
+            var vm = new GlyphViewModel(glyph, this);
             _glyphs.Add(vm);
             SelectedGlyph = vm;
         }
@@ -209,7 +209,7 @@ namespace RcfTool.ViewModel
             _glyphs.Clear();
             foreach (var glyph in _typeface.Glyphs)
             {
-                _glyphs.Add(new GlyphViewModel(glyph));
+                _glyphs.Add(new GlyphViewModel(glyph, this));
             }
         }
     }
