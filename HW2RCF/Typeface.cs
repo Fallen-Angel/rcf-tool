@@ -5,11 +5,6 @@ namespace Homeworld2.RCF
 {
     public class Typeface
     {
-        private const string ChunkName = "NAME";
-        private const string ChunkAttributes = "ATTR";
-        private const string ChunkImage = "IMAG";
-        private const string ChunkGlyph = "GLPH";
-
         private string _name;
         private string _attributes;
 
@@ -61,11 +56,11 @@ namespace Homeworld2.RCF
         public static Typeface Read(IFFReader iff)
         {
             var typeface = new Typeface();
-            iff.AddHandler(ChunkName, ChunkType.Default, typeface.ReadNAMEChunk);
-            iff.AddHandler(ChunkAttributes, ChunkType.Default, typeface.ReadATTRChunk);
+            iff.AddHandler(Chunks.Name, ChunkType.Default, typeface.ReadNAMEChunk);
+            iff.AddHandler(Chunks.Attributes, ChunkType.Default, typeface.ReadATTRChunk);
 
-            iff.AddHandler(ChunkImage, ChunkType.Form, typeface.ReadIMAGChunk);
-            iff.AddHandler(ChunkGlyph, ChunkType.Default, typeface.ReadGLPHChunk);
+            iff.AddHandler(Chunks.Image, ChunkType.Form, typeface.ReadIMAGChunk);
+            iff.AddHandler(Chunks.Glyph, ChunkType.Default, typeface.ReadGLPHChunk);
 
             iff.Parse();
             return typeface;
@@ -73,24 +68,24 @@ namespace Homeworld2.RCF
 
         public void Write(IFFWriter iff)
         {
-            iff.Push(ChunkName);
+            iff.Push(Chunks.Name);
             iff.Write(_name);
             iff.Pop();
 
-            iff.Push(ChunkAttributes);
+            iff.Push(Chunks.Attributes);
             iff.Write(_attributes);
             iff.Pop();
 
             foreach (var image in _images)
             {
-                iff.Push(ChunkImage, ChunkType.Form);
+                iff.Push(Chunks.Image, ChunkType.Form);
                 image.Write(iff);
                 iff.Pop();
             }
 
             foreach (var glyph in _glyphs)
             {
-                iff.Push(ChunkGlyph);
+                iff.Push(Chunks.Glyph);
                 glyph.Write(iff);
                 iff.Pop();
             }
