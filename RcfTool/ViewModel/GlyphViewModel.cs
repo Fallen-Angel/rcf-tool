@@ -2,48 +2,14 @@
 using GalaSoft.MvvmLight.Command;
 using Homeworld2.RCF;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace RcfTool.ViewModel
 {
     public class GlyphViewModel : ViewModelBase
     {
-        private Glyph _glyph;
-        public Glyph Glyph
-        {
-            get { return _glyph; }
-            set
-            {
-                if (_glyph != value)
-                {
-                    RaisePropertyChanging(() => Glyph);
-
-                    RaisePropertyChanging(() => Character);
-                    RaisePropertyChanging(() => ImageIndex);
-                    RaisePropertyChanging(() => LeftMargin);
-                    RaisePropertyChanging(() => TopMargin);
-                    RaisePropertyChanging(() => Width);
-                    RaisePropertyChanging(() => Height);
-
-                    _glyph = value;
-
-                    RaisePropertyChanged(() => Glyph);
-
-                    RaisePropertyChanged(() => Character);
-                    RaisePropertyChanged(() => ImageIndex);
-                    RaisePropertyChanged(() => LeftMargin);
-                    RaisePropertyChanged(() => TopMargin);
-                    RaisePropertyChanged(() => Width);
-                    RaisePropertyChanged(() => Height);
-                }
-            }
-        }
+        private readonly Glyph _glyph;
 
         public char Character
         {
@@ -238,9 +204,14 @@ namespace RcfTool.ViewModel
             }
         }
 
+        public GlyphViewModel(Glyph glyph)
+        {
+            _glyph = glyph;
+        }
+
         private void ExecuteExportCommand()
         {
-            SaveFileDialog dlg = new SaveFileDialog();
+            var dlg = new SaveFileDialog();
             dlg.Filter = "PNG images (.png)|*.png";
 
             if (dlg.ShowDialog() == true)
@@ -271,7 +242,7 @@ namespace RcfTool.ViewModel
 
         private void ExecuteReplaceCommand()
         {
-            OpenFileDialog dlg = new OpenFileDialog();
+            var dlg = new OpenFileDialog();
             dlg.Filter = "PNG images (.png)|*.png";
 
             if (dlg.ShowDialog() == true)

@@ -5,102 +5,95 @@ namespace Homeworld2.RCF
 {
     public class Typeface
     {
-        public const string ChunkName = "NAME";
-        public const string ChunkAttributes = "ATTR";
-        public const string ChunkImage = "IMAG";
-        public const string ChunkGlyph = "GLPH";
+        private const string ChunkName = "NAME";
+        private const string ChunkAttributes = "ATTR";
+        private const string ChunkImage = "IMAG";
+        private const string ChunkGlyph = "GLPH";
 
-        private string name;
-        private string attributes;
+        private string _name;
+        private string _attributes;
 
-        private List<Image> images = new List<Image>();
-        private List<Glyph> glyphs = new List<Glyph>();
+        private readonly List<Image> _images = new List<Image>();
+        private readonly List<Glyph> _glyphs = new List<Glyph>();
 
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
         public string Attributes
         {
-            get { return attributes; }
-            set { attributes = value; }
+            get { return _attributes; }
+            set { _attributes = value; }
         }
 
         public List<Image> Images
         {
-            get { return images; }
+            get { return _images; }
         }
 
         public List<Glyph> Glyphs
         {
-            get { return glyphs; }
+            get { return _glyphs; }
         }
 
         private void ReadNAMEChunk(IFFReader iff, ChunkAttributes attr)
         {
-            name = iff.ReadString();
+            _name = iff.ReadString();
         }
 
         private void ReadATTRChunk(IFFReader iff, ChunkAttributes attr)
         {
-            attributes = iff.ReadString();
+            _attributes = iff.ReadString();
         }
 
         private void ReadIMAGChunk(IFFReader iff, ChunkAttributes attr)
         {
-            Image image = new Image();
-            images.Add(image);
-            image.Read(iff);
+            _images.Add(Image.Read(iff));
         }
 
         private void ReadGLPHChunk(IFFReader iff, ChunkAttributes attr)
         {
-            Glyph glyph = new Glyph(this);
-            glyph.Read(iff);
-            glyphs.Add(glyph);
+            _glyphs.Add(Glyph.Read(iff));
         }
 
-        public void Read(IFFReader iff)
+        public static Typeface Read(IFFReader iff)
         {
-            iff.AddHandler(ChunkName, ChunkType.Default, ReadNAMEChunk);
-            iff.AddHandler(ChunkAttributes, ChunkType.Default, ReadATTRChunk);
+            var typeface = new Typeface();
+            iff.AddHandler(ChunkName, ChunkType.Default, typeface.ReadNAMEChunk);
+            iff.AddHandler(ChunkAttributes, ChunkType.Default, typeface.ReadATTRChunk);
 
-            iff.AddHandler(ChunkImage, ChunkType.Form, ReadIMAGChunk);
-            iff.AddHandler(ChunkGlyph, ChunkType.Default, ReadGLPHChunk);
+            iff.AddHandler(ChunkImage, ChunkType.Form, typeface.ReadIMAGChunk);
+            iff.AddHandler(ChunkGlyph, ChunkType.Default, typeface.ReadGLPHChunk);
 
             iff.Parse();
+            return typeface;
         }
 
         public void Write(IFFWriter iff)
         {
             iff.Push(ChunkName);
-            iff.Write(name);
+            iff.Write(_name);
             iff.Pop();
 
             iff.Push(ChunkAttributes);
-            iff.Write(attributes);
+            iff.Write(_attributes);
             iff.Pop();
 
-            for (int i = 0; i < images.Count; ++i)
+            foreach (var image in _images)
             {
                 iff.Push(ChunkImage, ChunkType.Form);
-                images[i].Write(iff);
+                image.Write(iff);
                 iff.Pop();
             }
 
-            for (int i = 0; i < glyphs.Count; ++i)
+            foreach (var glyph in _glyphs)
             {
                 iff.Push(ChunkGlyph);
-                glyphs[i].Write(iff);
+                glyph.Write(iff);
                 iff.Pop();
             }
-        }
-
-        public override string ToString()
-        {
-            return name;
         }
     }
 }

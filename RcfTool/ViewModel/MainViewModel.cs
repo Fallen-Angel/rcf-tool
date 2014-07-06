@@ -1,3 +1,4 @@
+using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Homeworld2.RCF;
@@ -21,7 +22,8 @@ namespace RcfTool.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private RCF _font = new RCF();
+        private const string RcfFilter = "Relic fonts (.rcf)|*.rcf";
+        private readonly RCF _font = new RCF();
 
         public string Name
         {
@@ -65,7 +67,7 @@ namespace RcfTool.ViewModel
             }
         }
 
-        private TypefaceViewModel _selectedTypeface = new TypefaceViewModel();
+        private TypefaceViewModel _selectedTypeface;
         public TypefaceViewModel SelectedTypeface
         {
             get { return _selectedTypeface; }
@@ -111,12 +113,11 @@ namespace RcfTool.ViewModel
 
         private void ExecuteOpenCommand()
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Relic fonts (.rcf)|*.rcf";
+            var dlg = new OpenFileDialog { Filter = RcfFilter };
 
             if (dlg.ShowDialog() == true)
             {
-                using (Stream stream = dlg.OpenFile())
+                using (var stream = dlg.OpenFile())
                 {
                     _font.Read(stream);
 
@@ -126,11 +127,10 @@ namespace RcfTool.ViewModel
 
                     _typefaces.Clear();
 
-                    foreach (Typeface typeface in _font.Typefaces)
+                    foreach (var typeface in _font.Typefaces)
                     {
-                        TypefaceViewModel vm = new TypefaceViewModel();
-                        vm.Typeface = typeface;
-                        _typefaces.Add(vm);
+
+                        _typefaces.Add(new TypefaceViewModel(typeface));
                     }
                 }
             }
@@ -152,31 +152,15 @@ namespace RcfTool.ViewModel
 
         private void ExecuteSaveCommand()
         {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Relic fonts (.rcf)|*.rcf";
+            var dlg = new SaveFileDialog { Filter = RcfFilter };
 
             if (dlg.ShowDialog() == true)
             {
-                using (Stream stream = dlg.OpenFile())
+                using (var stream = dlg.OpenFile())
                 {
                     _font.Write(stream);
                 }
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
-        public MainViewModel()
-        {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
         }
     }
 }

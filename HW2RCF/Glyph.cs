@@ -8,120 +8,109 @@ namespace Homeworld2.RCF
 {
     public class Glyph
     {
-        private char character;
-        private int imageIndex;
-        private int leftMargin;
-        private int topMargin;
-        private int width;
-        private int height;
+        private char _character;
+        private int _imageIndex;
+        private int _leftMargin;
+        private int _topMargin;
+        private int _width;
+        private int _height;
 
-        private float tmp1;
-        private float widthInPoints;
-        private float floatWidth;
-        private float tmp2;
-        private float heightInPoints;
-        private float floatHeight;
-        private byte temp;
+        private float _tmp1;
+        private float _widthInPoints;
+        private float _floatWidth;
+        private float _tmp2;
+        private float _heightInPoints;
+        private float _floatHeight;
+        private byte _temp;
 
-        private Typeface typeface;
+        private readonly Typeface _typeface;
 
         public char Character
         {
-            get { return character; }
-            set { character = value; }
+            get { return _character; }
+            set { _character = value; }
         }
 
         public int ImageIndex
         {
-            get { return imageIndex; }
+            get { return _imageIndex; }
             set
             {
-                imageIndex = value;
+                _imageIndex = value;
                 GenerateCropRect();
             }
         }
 
         public int LeftMargin
         {
-            get { return leftMargin; }
+            get { return _leftMargin; }
             set
             {
-                leftMargin = value;
+                _leftMargin = value;
                 GenerateCropRect();
             }
         }
 
         public int TopMargin
         {
-            get { return topMargin; }
+            get { return _topMargin; }
             set
             {
-                topMargin = value;
+                _topMargin = value;
                 GenerateCropRect();
             }
         }
 
         public int Width
         {
-            get { return width; }
+            get { return _width; }
             set
             {
-                width = value;
+                _width = value;
                 GenerateCropRect();
             }
         }
 
         public int Height
         {
-            get { return height; }
+            get { return _height; }
             set
             {
-                height = value;
+                _height = value;
                 GenerateCropRect();
             }
         }
 
         public float WidthInPoints
         {
-            get { return widthInPoints; }
-            set { widthInPoints = value; }
+            get { return _widthInPoints; }
+            set { _widthInPoints = value; }
         }
 
         public float FloatWidth
         {
-            get { return floatWidth; }
-            set { floatWidth = value; }
+            get { return _floatWidth; }
+            set { _floatWidth = value; }
         }
 
         public float HeightInPoints
         {
-            get { return heightInPoints; }
-            set { heightInPoints = value; }
+            get { return _heightInPoints; }
+            set { _heightInPoints = value; }
         }
 
         public float FloatHeight
         {
-            get { return floatHeight; }
-            set { floatHeight = value; }
+            get { return _floatHeight; }
+            set { _floatHeight = value; }
         }
 
-        private Int32Rect _cropRect;
-        public Int32Rect CropRect
-        {
-            get { return _cropRect; }
-            set
-            {
-                if (_cropRect != value)
-                {
-                    _cropRect = value;
-                }
-            }
-        }
+        public Int32Rect CropRect { get; set; }
 
         private void GenerateCropRect()
         {
-            CropRect = new Int32Rect(leftMargin, topMargin, width, height);
-            croppedBitmap = new CroppedBitmap(typeface.Images[imageIndex].Bitmap, CropRect);
+            CropRect = new Int32Rect(_leftMargin, _topMargin, _width, _height);
+            _croppedBitmap = new CroppedBitmap(_typeface.Images[_imageIndex].Bitmap, CropRect);
         }
 
         public BitmapSource ImageBitmap
@@ -131,83 +120,76 @@ namespace Homeworld2.RCF
 
         private Image Image
         {
-            get { return typeface.Images[imageIndex]; }
+            get { return _typeface.Images[_imageIndex]; }
         }
 
-        private CroppedBitmap croppedBitmap;
+        private CroppedBitmap _croppedBitmap;
 
         public BitmapSource GlyphBitmap
         {
-            get { return croppedBitmap; }
+            get { return _croppedBitmap; }
             set
             {
-                if (croppedBitmap != value)
+                if (!Equals(_croppedBitmap, value) &&
+                    ((value.PixelWidth == _croppedBitmap.PixelWidth) && (value.PixelHeight == _croppedBitmap.PixelHeight)))
                 {
-                    if ((value.PixelWidth == croppedBitmap.PixelWidth) && (value.PixelHeight == croppedBitmap.PixelHeight))
+                    if (value.Format != PixelFormats.Gray8)
                     {
-                        if (value.Format != PixelFormats.Gray8)
-                        {
-                            value = new FormatConvertedBitmap(value, PixelFormats.Gray8, BitmapPalettes.Gray256, 0);
-                        }
-
-                        byte[] data = new byte[value.PixelWidth * value.PixelHeight];
-                        value.CopyPixels(data, value.PixelWidth, 0);
-
-                        Image.ModifyBitmap(_cropRect, data, value.PixelWidth);
-                        GenerateCropRect();
+                        value = new FormatConvertedBitmap(value, PixelFormats.Gray8, BitmapPalettes.Gray256, 0);
                     }
+
+                    var data = new byte[value.PixelWidth * value.PixelHeight];
+                    value.CopyPixels(data, value.PixelWidth, 0);
+
+                    Image.ModifyBitmap(CropRect, data, value.PixelWidth);
+                    GenerateCropRect();
                 }
             }
         }
 
         public Glyph(Typeface typeface)
         {
-            this.typeface = typeface;
+            _typeface = typeface;
         }
 
-        public void Read(IFFReader iff)
+        public static Glyph Read(IFFReader iff)
         {
-            character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0];
-            imageIndex = iff.ReadInt32();
-            leftMargin = iff.ReadInt32();
-            topMargin = iff.ReadInt32();
-            width = iff.ReadInt32();
-            height = iff.ReadInt32();
+            var glyph = new Glyph();
+            glyph._character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0];
+            glyph._imageIndex = iff.ReadInt32();
+            glyph._leftMargin = iff.ReadInt32();
+            glyph._topMargin = iff.ReadInt32();
+            glyph._width = iff.ReadInt32();
+            glyph._height = iff.ReadInt32();
 
-            tmp1 = iff.ReadSingle();
-            widthInPoints = iff.ReadSingle();
-            floatWidth = iff.ReadSingle();
-            tmp2 = iff.ReadSingle();
-            heightInPoints = iff.ReadSingle();
-            floatHeight = iff.ReadSingle();
-            temp = iff.ReadByte();
+            glyph._tmp1 = iff.ReadSingle();
+            glyph._widthInPoints = iff.ReadSingle();
+            glyph._floatWidth = iff.ReadSingle();
+            glyph._tmp2 = iff.ReadSingle();
+            glyph._heightInPoints = iff.ReadSingle();
+            glyph._floatHeight = iff.ReadSingle();
+            glyph._temp = iff.ReadByte();
 
-            GenerateCropRect();
+            glyph.GenerateCropRect();
+            return glyph;
         }
 
         public void Write(IFFWriter iff)
         {
-            char[] characterArray = new char[1];
-            characterArray[0] = character;
-            iff.Write(Encoding.Unicode.GetBytes(characterArray));
-            iff.WriteInt32(imageIndex);
-            iff.WriteInt32(leftMargin);
-            iff.WriteInt32(topMargin);
-            iff.WriteInt32(width);
-            iff.WriteInt32(height);
+            iff.Write(Encoding.Unicode.GetBytes(new[] { _character }));
+            iff.WriteInt32(_imageIndex);
+            iff.WriteInt32(_leftMargin);
+            iff.WriteInt32(_topMargin);
+            iff.WriteInt32(_width);
+            iff.WriteInt32(_height);
 
-            iff.Write(tmp1);
-            iff.Write(widthInPoints);
-            iff.Write(floatWidth);
-            iff.Write(tmp2);
-            iff.Write(heightInPoints);
-            iff.Write(floatHeight);
-            iff.Write(temp);
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Character {1}", character);
+            iff.Write(_tmp1);
+            iff.Write(_widthInPoints);
+            iff.Write(_floatWidth);
+            iff.Write(_tmp2);
+            iff.Write(_heightInPoints);
+            iff.Write(_floatHeight);
+            iff.Write(_temp);
         }
     }
 }

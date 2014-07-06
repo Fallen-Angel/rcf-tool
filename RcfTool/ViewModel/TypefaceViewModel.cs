@@ -2,53 +2,16 @@
 using GalaSoft.MvvmLight.Command;
 using Homeworld2.RCF;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace RcfTool.ViewModel
 {
     public class TypefaceViewModel : ViewModelBase
     {
-        private Typeface _typeface;
-        public Typeface Typeface
-        {
-            get { return _typeface; }
-            set
-            {
-                if (_typeface != value)
-                {
-                    RaisePropertyChanging(() => Typeface);
-                    RaisePropertyChanging(() => Name);
-                    RaisePropertyChanging(() => Attributes);
-                    _typeface = value;
-                    RaisePropertyChanged(() => Typeface);
-                    RaisePropertyChanged(() => Name);
-                    RaisePropertyChanged(() => Attributes);
-
-                    _images.Clear();
-                    foreach (Image img in _typeface.Images)
-                    {
-                        ImageViewModel vm = new ImageViewModel();
-                        vm.Image = img;
-                        _images.Add(vm);
-                    }
-
-                    _glyphs.Clear();
-                    foreach (Glyph glyph in _typeface.Glyphs)
-                    {
-                        GlyphViewModel vm = new GlyphViewModel();
-                        vm.Glyph = glyph;
-                        _glyphs.Add(vm);
-                    }
-                }
-            }
-        }
+        private const string PngFilter = "PNG images (.png)|*.png";
+        private readonly Typeface _typeface;
 
         public string Name
         {
@@ -108,19 +71,10 @@ namespace RcfTool.ViewModel
             }
         }
 
-        private ObservableCollection<GlyphViewModel> _glyphs = new ObservableCollection<GlyphViewModel>();
+        private readonly ObservableCollection<GlyphViewModel> _glyphs = new ObservableCollection<GlyphViewModel>();
         public ObservableCollection<GlyphViewModel> Glyphs
         {
             get { return _glyphs; }
-            set
-            {
-                if (_glyphs != value)
-                {
-                    RaisePropertyChanging(() => Glyphs);
-                    _glyphs = value;
-                    RaisePropertyChanged(() => Glyphs);
-                }
-            }
         }
 
         private RelayCommand _importCommand;
@@ -139,27 +93,23 @@ namespace RcfTool.ViewModel
 
         private void ExecuteImportCommand()
         {
-            Image img = new Image();
-            img.Name = "";
-            img.Version = 1;
+            var image = new Image { Name = "", Version = 1 };
 
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "PNG images (.png)|*.png";
+            var dlg = new OpenFileDialog();
+            dlg.Filter = PngFilter;
 
             if (dlg.ShowDialog() == true)
             {
                 using (Stream stream = dlg.OpenFile())
                 {
                     BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                    BitmapFrame frame = decoder.Frames[0];
+                    var frame = decoder.Frames[0];
 
-                    img.Bitmap = frame;
+                    image.Bitmap = frame;
                 }
             }
-            ImageViewModel vm = new ImageViewModel();
-            vm.Image = img;
-            _typeface.Images.Add(img);
-            _images.Add(vm);
+            _typeface.Images.Add(image);
+            _images.Add(new ImageViewModel(image));
         }
 
         private RelayCommand _addGlyphCommand;
@@ -178,11 +128,10 @@ namespace RcfTool.ViewModel
 
         private void ExecuteAddGlyphCommand()
         {
-            Glyph glyph = new Glyph(_typeface);
+            var glyph = new Glyph(_typeface);
             _typeface.Glyphs.Add(glyph);
 
-            GlyphViewModel vm = new GlyphViewModel();
-            vm.Glyph = glyph;
+            var vm = new GlyphViewModel(glyph);
             _glyphs.Add(vm);
             SelectedGlyph = vm;
         }
@@ -203,15 +152,14 @@ namespace RcfTool.ViewModel
 
         private void ExecuteExportCommand(ImageViewModel image)
         {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "PNG images (.png)|*.png";
+            var dlg = new SaveFileDialog { Filter = PngFilter };
 
             if (dlg.ShowDialog() == true)
             {
                 BitmapEncoder encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(image.Bitmap));
 
-                using (Stream stream = dlg.OpenFile())
+                using (var stream = dlg.OpenFile())
                 {
                     encoder.Save(stream);
                 }
@@ -234,31 +182,35 @@ namespace RcfTool.ViewModel
 
         private void ExecuteReplaceCommand(ImageViewModel image)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "PNG images (.png)|*.png";
+            var dlg = new OpenFileDialog { Filter = PngFilter };
 
             if (dlg.ShowDialog() == true)
             {
                 using (Stream stream = dlg.OpenFile())
                 {
                     BitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                    BitmapFrame frame = decoder.Frames[0];
+                    var frame = decoder.Frames[0];
 
                     image.Bitmap = frame;
                 }
             }
         }
 
-        public TypefaceViewModel()
+        public TypefaceViewModel(Typeface typeface)
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            _typeface = typeface;
+
+            _images.Clear();
+            foreach (var image in _typeface.Images)
+            {
+                _images.Add(new ImageViewModel(image));
+            }
+
+            _glyphs.Clear();
+            foreach (var glyph in _typeface.Glyphs)
+            {
+                _glyphs.Add(new GlyphViewModel(glyph));
+            }
         }
     }
 }

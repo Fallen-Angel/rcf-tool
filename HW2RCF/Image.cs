@@ -112,12 +112,14 @@ namespace Homeworld2.RCF
             data = iff.ReadBytes(attr.Size);
         }
 
-        public void Read(IFFReader iff)
+        public static Image Read(IFFReader iff)
         {
-            iff.AddHandler(ChunkName, ChunkType.Default, ReadNAMEChunk);
-            iff.AddHandler(ChunkAttributes, ChunkType.Default, ReadATTRChunk);
-            iff.AddHandler(ChunkData, ChunkType.Default, ReadDATAChunk);
+            var image = new Image();
+            iff.AddHandler(ChunkName, ChunkType.Default, image.ReadNAMEChunk);
+            iff.AddHandler(ChunkAttributes, ChunkType.Default, image.ReadATTRChunk);
+            iff.AddHandler(ChunkData, ChunkType.Default, image.ReadDATAChunk);
             iff.Parse();
+            return image;
         }
 
         public void Write(IFFWriter iff)

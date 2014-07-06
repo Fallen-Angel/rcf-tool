@@ -14,26 +14,7 @@ namespace RcfTool.ViewModel
 {
     public class ImageViewModel : ViewModelBase
     {
-        private Image _image;
-        public Image Image
-        {
-            get { return _image; }
-            set
-            {
-                if (_image != value)
-                {
-                    RaisePropertyChanging(() => Image);
-                    RaisePropertyChanging(() => Name);
-                    RaisePropertyChanging(() => Version);
-                    RaisePropertyChanging(() => Bitmap);
-                    _image = value;
-                    RaisePropertyChanged(() => Image);
-                    RaisePropertyChanged(() => Name);
-                    RaisePropertyChanged(() => Version);
-                    RaisePropertyChanged(() => Bitmap);
-                }
-            }
-        }
+        private readonly Image _image;
 
         public string Name
         {
@@ -75,6 +56,11 @@ namespace RcfTool.ViewModel
                     RaisePropertyChanged(() => Bitmap);
                 }
             }
+        }
+
+        public ImageViewModel(Image image)
+        {
+            _image = image;
         }
     }
 }
