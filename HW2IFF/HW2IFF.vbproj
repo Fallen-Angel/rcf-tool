@@ -109,10 +109,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>cd "..\..\Bin"
-if exist "$(TargetFileName)" (del "$(TargetFileName)")
-cd /D "$(TargetDir)"
-copy "$(TargetFileName)" "..\..\..\..\Bin\$(TargetFileName)</PostBuildEvent>
-  </PropertyGroup>
 </Project>
