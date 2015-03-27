@@ -5,23 +5,11 @@ namespace Homeworld2.RCF
 {
     public class Typeface
     {
-        private string _name;
-        private string _attributes;
-
         private readonly List<Image> _images = new List<Image>();
         private readonly List<Glyph> _glyphs = new List<Glyph>();
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string Attributes
-        {
-            get { return _attributes; }
-            set { _attributes = value; }
-        }
+        public string Name { get; set; }
+        public string Attributes { get; set; }
 
         public List<Image> Images
         {
@@ -35,12 +23,12 @@ namespace Homeworld2.RCF
 
         private void ReadNAMEChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _name = iff.ReadString();
+            Name = iff.ReadString();
         }
 
         private void ReadATTRChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _attributes = iff.ReadString();
+            Attributes = iff.ReadString();
         }
 
         private void ReadIMAGChunk(IFFReader iff, ChunkAttributes attr)
@@ -69,11 +57,11 @@ namespace Homeworld2.RCF
         public void Write(IFFWriter iff)
         {
             iff.Push(Chunks.Name);
-            iff.Write(_name);
+            iff.Write(Name);
             iff.Pop();
 
             iff.Push(Chunks.Attributes);
-            iff.Write(_attributes);
+            iff.Write(Attributes);
             iff.Pop();
 
             foreach (var image in _images)
