@@ -1,17 +1,18 @@
 ﻿using System.Windows;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using Homeworld2.RCF;
-using Microsoft.Win32;
-using System.IO;
-using System.Windows.Media.Imaging;
+using System.Windows.Input;
 using System.Windows.Media;
-using Typeface = Homeworld2.RCF.Typeface;
+using System.Windows.Media.Imaging;
+using Homeworld2.RCF;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Win32;
 
-namespace RcfTool.ViewModel
+namespace RcfTool.ViewModels
 {
-    public class GlyphViewModel : ViewModelBase
+    public class GlyphViewModel : BindableBase
     {
+        private const string PngFilter = "PNG images (.png)|*.png";
+
         public Int32Rect CropRect { get; set; }
 
         private void GenerateCropRect()
@@ -20,10 +21,7 @@ namespace RcfTool.ViewModel
             _croppedBitmap = new CroppedBitmap(Image.Bitmap, CropRect);
         }
 
-        private ImageViewModel Image
-        {
-            get { return _typefaceViewModel.Images[_glyph.ImageIndex]; }
-        }
+        private ImageViewModel Image => _typefaceViewModel.Images[_glyph.ImageIndex];
 
         private CroppedBitmap _croppedBitmap;
 
@@ -37,9 +35,8 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.Character != value)
                 {
-                    RaisePropertyChanging(() => Character);
                     _glyph.Character = value;
-                    RaisePropertyChanged(() => Character);
+                    OnPropertyChanged(nameof(Character));
                 }
             }
         }
@@ -51,14 +48,11 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.ImageIndex != value)
                 {
-                    RaisePropertyChanging(() => ImageIndex);
-                    RaisePropertyChanging(() => ImageBitmap);
-                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.ImageIndex = value - 1;
                     GenerateCropRect();
-                    RaisePropertyChanged(() => ImageIndex);
-                    RaisePropertyChanged(() => ImageBitmap);
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(ImageIndex));
+                    OnPropertyChanged(nameof(ImageBitmap));
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
@@ -70,14 +64,11 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.LeftMargin != value)
                 {
-                    RaisePropertyChanging(() => LeftMargin);
-                    RaisePropertyChanging(() => ImageBitmap);
-                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.LeftMargin = value;
                     GenerateCropRect();
-                    RaisePropertyChanged(() => LeftMargin);
-                    RaisePropertyChanged(() => ImageBitmap);
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(LeftMargin));
+                    OnPropertyChanged(nameof(ImageBitmap));
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
@@ -89,14 +80,11 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.TopMargin != value)
                 {
-                    RaisePropertyChanging(() => TopMargin);
-                    RaisePropertyChanging(() => ImageBitmap);
-                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.TopMargin = value;
                     GenerateCropRect();
-                    RaisePropertyChanged(() => TopMargin);
-                    RaisePropertyChanged(() => ImageBitmap);
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(TopMargin));
+                    OnPropertyChanged(nameof(ImageBitmap));
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
@@ -108,14 +96,11 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.Width != value)
                 {
-                    RaisePropertyChanging(() => Width);
-                    RaisePropertyChanging(() => ImageBitmap);
-                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.Width = value;
                     GenerateCropRect();
-                    RaisePropertyChanged(() => Width);
-                    RaisePropertyChanged(() => ImageBitmap);
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(Width));
+                    OnPropertyChanged(nameof(ImageBitmap));
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
@@ -127,14 +112,11 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.Height != value)
                 {
-                    RaisePropertyChanging(() => Height);
-                    RaisePropertyChanging(() => ImageBitmap);
-                    RaisePropertyChanging(() => GlyphBitmap);
                     _glyph.Height = value;
                     GenerateCropRect();
-                    RaisePropertyChanged(() => Height);
-                    RaisePropertyChanged(() => ImageBitmap);
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(Height));
+                    OnPropertyChanged(nameof(ImageBitmap));
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
@@ -146,9 +128,8 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.WidthInPoints != value)
                 {
-                    RaisePropertyChanging(() => WidthInPoints);
                     _glyph.WidthInPoints = value;
-                    RaisePropertyChanged(() => WidthInPoints);
+                    OnPropertyChanged(nameof(WidthInPoints));
                 }
             }
         }
@@ -160,9 +141,8 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.FloatWidth != value)
                 {
-                    RaisePropertyChanging(() => FloatWidth);
                     _glyph.FloatWidth = value;
-                    RaisePropertyChanged(() => FloatWidth);
+                    OnPropertyChanged(nameof(FloatWidth));
                 }
             }
         }
@@ -174,9 +154,8 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.HeightInPoints != value)
                 {
-                    RaisePropertyChanging(() => HeightInPoints);
                     _glyph.HeightInPoints = value;
-                    RaisePropertyChanged(() => HeightInPoints);
+                    OnPropertyChanged(nameof(HeightInPoints));
                 }
             }
         }
@@ -188,9 +167,8 @@ namespace RcfTool.ViewModel
             {
                 if (_glyph.FloatHeight != value)
                 {
-                    RaisePropertyChanging(() => FloatHeight);
                     _glyph.FloatHeight = value;
-                    RaisePropertyChanged(() => FloatHeight);
+                    OnPropertyChanged(nameof(FloatHeight));
                 }
             }
         }
@@ -202,9 +180,6 @@ namespace RcfTool.ViewModel
             {
                 if (_croppedBitmap != value)
                 {
-                    RaisePropertyChanging(() => GlyphBitmap);
-
-
                     if (!Equals(_croppedBitmap, value) &&
                         ((value.PixelWidth == _croppedBitmap.PixelWidth) &&
                          (value.PixelHeight == _croppedBitmap.PixelHeight)))
@@ -221,30 +196,19 @@ namespace RcfTool.ViewModel
                         GenerateCropRect();
                     }
 
-
-                    RaisePropertyChanged(() => GlyphBitmap);
+                    OnPropertyChanged(nameof(GlyphBitmap));
                 }
             }
         }
 
-        public BitmapSource ImageBitmap
-        {
-            get { return Image.Bitmap; }
-        }
+        public BitmapSource ImageBitmap => Image.Bitmap;
 
-        private RelayCommand _exportCommand;
+        private DelegateCommand _exportCommand;
 
         /// <summary>
         /// Gets the ExportCommand.
         /// </summary>
-        public RelayCommand ExportCommand
-        {
-            get
-            {
-                return _exportCommand
-                    ?? (_exportCommand = new RelayCommand(ExecuteExportCommand));
-            }
-        }
+        public ICommand ExportCommand => _exportCommand ?? (_exportCommand = new DelegateCommand(ExecuteExportCommand));
 
         public GlyphViewModel(Glyph glyph, TypefaceViewModel typefaceViewModel)
         {
@@ -255,7 +219,7 @@ namespace RcfTool.ViewModel
 
         private void ExecuteExportCommand()
         {
-            var dlg = new SaveFileDialog { Filter = "PNG images (.png)|*.png" };
+            var dlg = new SaveFileDialog { Filter = PngFilter };
 
             if (dlg.ShowDialog() == true)
             {
@@ -269,23 +233,16 @@ namespace RcfTool.ViewModel
             }
         }
 
-        private RelayCommand _replaceCommand;
+        private DelegateCommand _replaceCommand;
 
         /// <summary>
         /// Gets the ReplaceCommand.
         /// </summary>
-        public RelayCommand ReplaceCommand
-        {
-            get
-            {
-                return _replaceCommand
-                    ?? (_replaceCommand = new RelayCommand(ExecuteReplaceCommand));
-            }
-        }
+        public ICommand ReplaceCommand => _replaceCommand ?? (_replaceCommand = new DelegateCommand(ExecuteReplaceCommand));
 
         private void ExecuteReplaceCommand()
         {
-            var dlg = new OpenFileDialog { Filter = "PNG images (.png)|*.png" };
+            var dlg = new OpenFileDialog { Filter = PngFilter };
 
             if (dlg.ShowDialog() == true)
             {

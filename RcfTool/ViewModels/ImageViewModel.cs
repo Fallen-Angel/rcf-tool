@@ -1,20 +1,12 @@
 ﻿using System.Windows;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using Homeworld2.RCF;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Homeworld2.RCF;
+using Microsoft.Practices.Prism.Mvvm;
 
-namespace RcfTool.ViewModel
+namespace RcfTool.ViewModels
 {
-    public class ImageViewModel : ViewModelBase
+    public class ImageViewModel : BindableBase
     {
         private readonly Image _image;
         private WriteableBitmap _bitmap;
@@ -26,9 +18,8 @@ namespace RcfTool.ViewModel
             {
                 if (_image.Name != value)
                 {
-                    RaisePropertyChanging(() => Name);
                     _image.Name = value;
-                    RaisePropertyChanged(() => Name);
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -40,34 +31,30 @@ namespace RcfTool.ViewModel
             {
                 if (_image.Version != value)
                 {
-                    RaisePropertyChanging(() => Version);
                     _image.Version = value;
-                    RaisePropertyChanged(() => Version);
+                    OnPropertyChanged(nameof(Version));
                 }
             }
         }
 
         public BitmapSource Bitmap
         {
-            get
-            {
-                if (_bitmap == null)
-                {
-                    _bitmap = new WriteableBitmap(BitmapSource.Create(_image.Width, _image.Height, 96, 96, PixelFormats.Gray8, BitmapPalettes.Gray256, _image.Data, _image.Width));
-                }
-                return _bitmap;
+            get {
+                return _bitmap ??
+                       (_bitmap =
+                           new WriteableBitmap(BitmapSource.Create(_image.Width, _image.Height, 96, 96,
+                               PixelFormats.Gray8, BitmapPalettes.Gray256, _image.Data, _image.Width)));
             }
             set
             {
                 if (_bitmap != value)
                 {
-                    RaisePropertyChanging(() => Bitmap);
                     if (value.Format != PixelFormats.Gray8)
                     {
                         value = new FormatConvertedBitmap(value, PixelFormats.Gray8, BitmapPalettes.Gray256, 0);
                     }
                     SetNewBitmap(value);
-                    RaisePropertyChanged(() => Bitmap);
+                    OnPropertyChanged(nameof(Bitmap));
                 }
             }
         }

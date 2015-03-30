@@ -1,7 +1,9 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="RcfTool.MainWindow"
-        Height="408" Width="587.4" Title="Relic Font Tool" Icon="decade.ico" DataContext="{Binding Main, Source={StaticResource Locator}}">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mvvm="clr-namespace:Microsoft.Practices.Prism.Mvvm;assembly=Microsoft.Practices.Prism.Mvvm.Desktop"
+        x:Class="RcfTool.Views.MainWindow"
+        Height="408" Width="587.4" Title="Relic Font Tool" Icon="/RcfTool;component/decade.ico" mvvm:ViewModelLocator.AutoWireViewModel="True">
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar ToolBarTray.IsLocked="True">
@@ -12,14 +14,14 @@
             </ToolBar>
         </ToolBarTray>
         <StackPanel DockPanel.Dock="Left" Width="200">
-            <Label Content="Name" Target="{Binding ElementName=fontName}"/>
-            <TextBox x:Name="fontName" Height="23" TextWrapping="Wrap" Text="{Binding Name}"/>
-            <Label Content="Version" Target="{Binding ElementName=fontVersion}"/>
-            <TextBox x:Name="fontVersion" Height="23" TextWrapping="Wrap" Text="{Binding Version}"/>
-            <Label Content="Charset" Target="{Binding ElementName=fontCharset}" HorizontalAlignment="Left"/>
-            <TextBox x:Name="fontCharset" Text="{Binding Charset}" TextWrapping="Wrap"/>
-            <Label Content="Typefaces" Target="{Binding ElementName=fontTypefaces}"/>
-            <ListBox x:Name="fontTypefaces" MinHeight="100" ItemsSource="{Binding Typefaces}" SelectedItem="{Binding SelectedTypeface}" DisplayMemberPath="Name"/>
+            <Label Content="Name" Target="{Binding ElementName=FontName}"/>
+            <TextBox x:Name="FontName" Height="23" TextWrapping="Wrap" Text="{Binding Name}"/>
+            <Label Content="Version" Target="{Binding ElementName=FontVersion}"/>
+            <TextBox x:Name="FontVersion" Height="23" TextWrapping="Wrap" Text="{Binding Version}"/>
+            <Label Content="Charset" Target="{Binding ElementName=FontCharset}" HorizontalAlignment="Left"/>
+            <TextBox x:Name="FontCharset" Text="{Binding Charset}" TextWrapping="Wrap"/>
+            <Label Content="Typefaces" Target="{Binding ElementName=FontTypefaces}"/>
+            <ListBox x:Name="FontTypefaces" MinHeight="100" ItemsSource="{Binding Typefaces}" SelectedItem="{Binding SelectedTypeface}" DisplayMemberPath="Name"/>
         </StackPanel>
         <Grid DockPanel.Dock="Right" DataContext="{Binding SelectedTypeface}">
             <Grid.RowDefinitions>

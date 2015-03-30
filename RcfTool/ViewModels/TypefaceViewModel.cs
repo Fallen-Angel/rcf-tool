@@ -1,14 +1,15 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using Homeworld2.RCF;
-using Microsoft.Win32;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Homeworld2.RCF;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
+using Microsoft.Win32;
 
-namespace RcfTool.ViewModel
+namespace RcfTool.ViewModels
 {
-    public class TypefaceViewModel : ViewModelBase
+    public class TypefaceViewModel : BindableBase
     {
         private const string PngFilter = "PNG images (.png)|*.png";
         private readonly Typeface _typeface;
@@ -20,9 +21,8 @@ namespace RcfTool.ViewModel
             {
                 if (_typeface.Name != value)
                 {
-                    RaisePropertyChanging(() => Name);
                     _typeface.Name = value;
-                    RaisePropertyChanged(() => Name);
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -34,9 +34,8 @@ namespace RcfTool.ViewModel
             {
                 if (_typeface.Attributes != value)
                 {
-                    RaisePropertyChanging(() => Attributes);
                     _typeface.Attributes = value;
-                    RaisePropertyChanged(() => Attributes);
+                    OnPropertyChanged(nameof(Attributes));
                 }
             }
         }
@@ -45,51 +44,19 @@ namespace RcfTool.ViewModel
         public GlyphViewModel SelectedGlyph
         {
             get { return _selectedGlyph; }
-            set
-            {
-                if (_selectedGlyph != value)
-                {
-                    RaisePropertyChanging(() => SelectedGlyph);
-                    _selectedGlyph = value;
-                    RaisePropertyChanged(() => SelectedGlyph);
-                }
-            }
+            set { SetProperty(ref _selectedGlyph, value); }
         }
 
-        private ObservableCollection<ImageViewModel> _images = new ObservableCollection<ImageViewModel>();
-        public ObservableCollection<ImageViewModel> Images
-        {
-            get { return _images; }
-            set
-            {
-                if (_images != value)
-                {
-                    RaisePropertyChanging(() => Images);
-                    _images = value;
-                    RaisePropertyChanged(() => Images);
-                }
-            }
-        }
+        public ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
 
-        private readonly ObservableCollection<GlyphViewModel> _glyphs = new ObservableCollection<GlyphViewModel>();
-        public ObservableCollection<GlyphViewModel> Glyphs
-        {
-            get { return _glyphs; }
-        }
+        public ObservableCollection<GlyphViewModel> Glyphs { get; } = new ObservableCollection<GlyphViewModel>();
 
-        private RelayCommand _importCommand;
+        private DelegateCommand _importCommand;
 
         /// <summary>
         /// Gets the ImportCommand.
         /// </summary>
-        public RelayCommand ImportCommand
-        {
-            get
-            {
-                return _importCommand
-                    ?? (_importCommand = new RelayCommand(ExecuteImportCommand));
-            }
-        }
+        public ICommand ImportCommand => _importCommand ?? (_importCommand = new DelegateCommand(ExecuteImportCommand));
 
         private void ExecuteImportCommand()
         {
@@ -109,22 +76,15 @@ namespace RcfTool.ViewModel
                 }
             }
             _typeface.Images.Add(image);
-            _images.Add(imageViewModel);
+            Images.Add(imageViewModel);
         }
 
-        private RelayCommand _addGlyphCommand;
+        private DelegateCommand _addGlyphCommand;
 
         /// <summary>
         /// Gets the AddGlyphCommand.
         /// </summary>
-        public RelayCommand AddGlyphCommand
-        {
-            get
-            {
-                return _addGlyphCommand
-                    ?? (_addGlyphCommand = new RelayCommand(ExecuteAddGlyphCommand));
-            }
-        }
+        public ICommand AddGlyphCommand => _addGlyphCommand ?? (_addGlyphCommand = new DelegateCommand(ExecuteAddGlyphCommand));
 
         private void ExecuteAddGlyphCommand()
         {
@@ -132,23 +92,16 @@ namespace RcfTool.ViewModel
             _typeface.Glyphs.Add(glyph);
 
             var vm = new GlyphViewModel(glyph, this);
-            _glyphs.Add(vm);
+            Glyphs.Add(vm);
             SelectedGlyph = vm;
         }
 
-        private RelayCommand<ImageViewModel> _exportCommand;
+        private DelegateCommand<ImageViewModel> _exportCommand;
 
         /// <summary>
         /// Gets the ExportCommand.
         /// </summary>
-        public RelayCommand<ImageViewModel> ExportCommand
-        {
-            get
-            {
-                return _exportCommand
-                    ?? (_exportCommand = new RelayCommand<ImageViewModel>(ExecuteExportCommand));
-            }
-        }
+        public DelegateCommand<ImageViewModel> ExportCommand => _exportCommand ?? (_exportCommand = new DelegateCommand<ImageViewModel>(ExecuteExportCommand));
 
         private void ExecuteExportCommand(ImageViewModel image)
         {
@@ -166,19 +119,12 @@ namespace RcfTool.ViewModel
             }
         }
 
-        private RelayCommand<ImageViewModel> _replaceCommand;
+        private DelegateCommand<ImageViewModel> _replaceCommand;
 
         /// <summary>
         /// Gets the ReplaceCommand.
         /// </summary>
-        public RelayCommand<ImageViewModel> ReplaceCommand
-        {
-            get
-            {
-                return _replaceCommand
-                    ?? (_replaceCommand = new RelayCommand<ImageViewModel>(ExecuteReplaceCommand));
-            }
-        }
+        public DelegateCommand<ImageViewModel> ReplaceCommand => _replaceCommand ?? (_replaceCommand = new DelegateCommand<ImageViewModel>(ExecuteReplaceCommand));
 
         private void ExecuteReplaceCommand(ImageViewModel image)
         {
@@ -200,16 +146,16 @@ namespace RcfTool.ViewModel
         {
             _typeface = typeface;
 
-            _images.Clear();
+            Images.Clear();
             foreach (var image in _typeface.Images)
             {
-                _images.Add(new ImageViewModel(image));
+                Images.Add(new ImageViewModel(image));
             }
 
-            _glyphs.Clear();
+            Glyphs.Clear();
             foreach (var glyph in _typeface.Glyphs)
             {
-                _glyphs.Add(new GlyphViewModel(glyph, this));
+                Glyphs.Add(new GlyphViewModel(glyph, this));
             }
         }
     }
