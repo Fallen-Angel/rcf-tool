@@ -7,41 +7,17 @@ namespace Homeworld2.RCF
 {
     public class RCF
     {
-        private string _name;
-        private int _version;
         private byte[] _attributes;
-        private int _charCount;
-        private string _charset;
 
-        private readonly List<Typeface> _typefaces = new List<Typeface>();
+        public string Name { get; set; }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public int Version { get; set; }
 
-        public int Version
-        {
-            get { return _version; }
-            set { _version = value; }
-        }
+        public int CharsetCount { get; private set; }
 
-        public int CharsetCount
-        {
-            get { return _charCount; }
-        }
+        public string Charset { get; set; }
 
-        public string Charset
-        {
-            get { return _charset; }
-            set { _charset = value; }
-        }
-
-        public List<Typeface> Typefaces
-        {
-            get { return _typefaces; }
-        }
+        public List<Typeface> Typefaces { get; } = new List<Typeface>();
 
         private void ReadFONTChunk(IFFReader iff, ChunkAttributes attr)
         {
@@ -57,7 +33,7 @@ namespace Homeworld2.RCF
 
         private void ReadVERSChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _version = iff.ReadInt32();
+            Version = iff.ReadInt32();
         }
 
         private void ReadATTRChunk(IFFReader iff, ChunkAttributes attr)
@@ -67,23 +43,23 @@ namespace Homeworld2.RCF
 
         private void ReadNAMEChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _name = iff.ReadString();
+            Name = iff.ReadString();
         }
 
         private void ReadCSETChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _charCount = iff.ReadInt32();
-            _charset = Encoding.Unicode.GetString(iff.ReadBytes(2 * _charCount));
+            CharsetCount = iff.ReadInt32();
+            Charset = Encoding.Unicode.GetString(iff.ReadBytes(2 * CharsetCount));
         }
 
         private void ReadTYPEChunk(IFFReader iff, ChunkAttributes attr)
         {
-            _typefaces.Add(Typeface.Read(iff));
+            Typefaces.Add(Typeface.Read(iff));
         }
 
         public void Read(Stream stream)
         {
-            _typefaces.Clear();
+            Typefaces.Clear();
 
             var iff = new IFFReader(stream);
             iff.AddHandler(Chunks.Font, ChunkType.Form, ReadFONTChunk);
@@ -96,11 +72,11 @@ namespace Homeworld2.RCF
             iff.Push(Chunks.Font, ChunkType.Form);
 
             iff.Push(Chunks.Name);
-            iff.Write(_name);
+            iff.Write(Name);
             iff.Pop();
 
             iff.Push(Chunks.Version);
-            iff.WriteInt32(_version);
+            iff.WriteInt32(Version);
             iff.Pop();
 
             iff.Push(Chunks.Attributes);
@@ -108,11 +84,11 @@ namespace Homeworld2.RCF
             iff.Pop();
 
             iff.Push(Chunks.Charset);
-            iff.WriteInt32(_charCount);
-            iff.Write(Encoding.Unicode.GetBytes(_charset));
+            iff.WriteInt32(CharsetCount);
+            iff.Write(Encoding.Unicode.GetBytes(Charset));
             iff.Pop();
 
-            foreach (var typeface in _typefaces)
+            foreach (var typeface in Typefaces)
             {
                 iff.Push(Chunks.Typeface, ChunkType.Form);
                 typeface.Write(iff);
