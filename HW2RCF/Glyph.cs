@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Windows;
 using Homeworld2.IFF;
 
 namespace Homeworld2.RCF

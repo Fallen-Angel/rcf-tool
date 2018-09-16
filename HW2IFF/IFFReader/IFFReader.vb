@@ -215,7 +215,7 @@ Public NotInheritable Class IFFReader
   ' Build the output string.
   If Length <> 0 Then
    For I As Integer = 0 To CInt(Length) - 1
-    outStr &= Chr(str(I))
+    outStr &= ChrW(str(I))
 
    Next I ' For I As Integer = 0 To CInt(Length) - 1
   End If ' If Length <> 0 Then
@@ -262,10 +262,10 @@ Public NotInheritable Class IFFReader
  ''' The <c>UInt32</c> to convert.
  ''' </param>
  Private Shared Function __swap(ByVal v As UInteger) As UInteger
-  Return ((CUInt((v And &HFF000000) >> 24)) Or _
+  Return (CUInt((v And &HFF000000) >> 24)) Or _
           (CUInt((v And &HFF0000) >> 16) << 8) Or _
           (CUInt((v And &HFF00) >> 8) << 16) Or _
-          (CUInt((v And &HFF)) << 24))
+          (CUInt((v And &HFF)) << 24)
 
  End Function
 
@@ -282,7 +282,7 @@ Public NotInheritable Class IFFReader
   Trace.TraceInformation("Skipping chunk:" & vbCrLf & _
                          " ID: """ & ChunkAttributes.ID & """" & vbCrLf & _
                          " Type: '" & ChunkAttributes.Type.ToString() & "'" & vbCrLf & _
-                         CStr(IIf(ChunkAttributes.Type = ChunkType.Normal, " Version: " & CStr(ChunkAttributes.Version), "")))
+                         If(ChunkAttributes.Type = ChunkType.Normal, " Version: " & ChunkAttributes.Version, ""))
 
  End Sub
 

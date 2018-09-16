@@ -126,7 +126,7 @@ Public NotInheritable Class IFFWriter
      Exit For
 
     ' Copy the character.
-    str(I) = CByte(Asc([String](I)) And &HFF)
+    str(I) = CByte(AscW([String](I)) And &HFF)
 
    Next I ' For I As Integer = 0 To CInt(Length) - 1
   End If ' If [String] IsNot Nothing Then
@@ -157,7 +157,7 @@ Public NotInheritable Class IFFWriter
 
         ' Write the string itself.
         For I As Integer = 0 To [String].Length - 1
-            Write(CByte(&HFF And Asc([String](I))))
+            Write(CByte(&HFF And AscW([String](I))))
 
         Next I ' For I As Integer = 0 To [String].Length - 1
 
