@@ -20,27 +20,22 @@ namespace Homeworld2.RCF
         public float BitmapBottom { get; set; }
         public byte Zero { get; set; }
 
-        public static Glyph Read(IFFReader iff)
+        public static Glyph Read(IFFReader iff) => new Glyph
         {
-            var glyph = new Glyph
-            {
-                Character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0],
-                ImageIndex = iff.ReadInt32(),
-                LeftMargin = iff.ReadInt32(),
-                TopMargin = iff.ReadInt32(),
-                Width = iff.ReadInt32(),
-                Height = iff.ReadInt32(),
-                BitmapLeft = iff.ReadSingle(),
-                BitmapRight = iff.ReadSingle(),
-                AdvanceX = iff.ReadSingle(),
-                BitmapTop = iff.ReadSingle(),
-                Baseline = iff.ReadSingle(),
-                BitmapBottom = iff.ReadSingle(),
-                Zero = iff.ReadByte()
-            };
-
-            return glyph;
-        }
+            Character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0],
+            ImageIndex = iff.ReadInt32(),
+            LeftMargin = iff.ReadInt32(),
+            TopMargin = iff.ReadInt32(),
+            Width = iff.ReadInt32(),
+            Height = iff.ReadInt32(),
+            BitmapLeft = iff.ReadSingle(),
+            BitmapRight = iff.ReadSingle(),
+            AdvanceX = iff.ReadSingle(),
+            BitmapTop = iff.ReadSingle(),
+            Baseline = iff.ReadSingle(),
+            BitmapBottom = iff.ReadSingle(),
+            Zero = iff.ReadByte()
+        };
 
         public void Write(IFFWriter iff)
         {
