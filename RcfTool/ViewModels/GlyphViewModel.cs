@@ -123,12 +123,12 @@ namespace RcfTool.ViewModels
 
         public float WidthInPoints
         {
-            get { return _glyph.WidthInPoints; }
+            get { return _glyph.BitmapRight; }
             set
             {
-                if (_glyph.WidthInPoints != value)
+                if (_glyph.BitmapRight != value)
                 {
-                    _glyph.WidthInPoints = value;
+                    _glyph.BitmapRight = value;
                     OnPropertyChanged(nameof(WidthInPoints));
                 }
             }
@@ -136,12 +136,12 @@ namespace RcfTool.ViewModels
 
         public float FloatWidth
         {
-            get { return _glyph.FloatWidth; }
+            get { return _glyph.AdvanceX; }
             set
             {
-                if (_glyph.FloatWidth != value)
+                if (_glyph.AdvanceX != value)
                 {
-                    _glyph.FloatWidth = value;
+                    _glyph.AdvanceX = value;
                     OnPropertyChanged(nameof(FloatWidth));
                 }
             }
@@ -149,12 +149,12 @@ namespace RcfTool.ViewModels
 
         public float HeightInPoints
         {
-            get { return _glyph.HeightInPoints; }
+            get { return _glyph.Baseline; }
             set
             {
-                if (_glyph.HeightInPoints != value)
+                if (_glyph.Baseline != value)
                 {
-                    _glyph.HeightInPoints = value;
+                    _glyph.Baseline = value;
                     OnPropertyChanged(nameof(HeightInPoints));
                 }
             }
@@ -162,12 +162,12 @@ namespace RcfTool.ViewModels
 
         public float FloatHeight
         {
-            get { return _glyph.FloatHeight; }
+            get { return _glyph.BitmapBottom; }
             set
             {
-                if (_glyph.FloatHeight != value)
+                if (_glyph.BitmapBottom != value)
                 {
-                    _glyph.FloatHeight = value;
+                    _glyph.BitmapBottom = value;
                     OnPropertyChanged(nameof(FloatHeight));
                 }
             }
