@@ -1,6 +1,6 @@
 ﻿namespace Homeworld2.RCF
 {
-    public abstract class Chunks
+    public static class Chunks
     {
         public const string Font = "FONT";
         public const string Name = "NAME";

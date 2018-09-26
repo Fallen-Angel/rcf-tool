@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Homeworld2.IFF;
+﻿using System.IO;
+using System.Text;
 
 namespace Homeworld2.RCF
 {
@@ -19,7 +19,7 @@ namespace Homeworld2.RCF
         public float BitmapBottom { get; set; }
         public byte Zero { get; set; }
 
-        public static Glyph Read(IFFReader iff) => new Glyph
+        internal static Glyph Read(BinaryReader iff) => new Glyph
         {
             Character = Encoding.Unicode.GetChars(iff.ReadBytes(2))[0],
             ImageIndex = iff.ReadInt32(),
@@ -36,14 +36,14 @@ namespace Homeworld2.RCF
             Zero = iff.ReadByte()
         };
 
-        public void Write(IFFWriter iff)
+        internal void Write(BinaryWriter iff)
         {
             iff.Write(Encoding.Unicode.GetBytes(new[] { Character }));
-            iff.WriteInt32(ImageIndex);
-            iff.WriteInt32(LeftMargin);
-            iff.WriteInt32(TopMargin);
-            iff.WriteInt32(Width);
-            iff.WriteInt32(Height);
+            iff.Write(ImageIndex);
+            iff.Write(LeftMargin);
+            iff.Write(TopMargin);
+            iff.Write(Width);
+            iff.Write(Height);
 
             iff.Write(BitmapLeft);
             iff.Write(BitmapRight);

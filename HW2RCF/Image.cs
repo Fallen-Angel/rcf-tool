@@ -1,6 +1,5 @@
 ﻿using System;
 using Homeworld2.IFF;
-using System.Windows;
 
 namespace Homeworld2.RCF
 {
@@ -41,7 +40,7 @@ namespace Homeworld2.RCF
             return image;
         }
 
-        public void Write(IFFWriter iff)
+        internal void Write(IFFWriter iff)
         {
             iff.Push(Chunks.Name);
             iff.Write(Name);

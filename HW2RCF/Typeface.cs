@@ -32,7 +32,7 @@ namespace Homeworld2.RCF
             Glyphs.Add(Glyph.Read(iff));
         }
 
-        public static Typeface Read(IFFReader iff)
+        internal static Typeface Read(IFFReader iff)
         {
             var typeface = new Typeface();
             iff.AddHandler(Chunks.Name, ChunkType.Default, typeface.ReadNAMEChunk);
@@ -45,7 +45,7 @@ namespace Homeworld2.RCF
             return typeface;
         }
 
-        public void Write(IFFWriter iff)
+        internal void Write(IFFWriter iff)
         {
             iff.Push(Chunks.Name);
             iff.Write(Name);
